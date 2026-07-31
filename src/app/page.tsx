@@ -1,11 +1,32 @@
+import { HomeProvider } from "@/context/HomeContext";
+import { Loader } from "@/components/loader/Loader";
 import { Navbar } from "@/components/layout/Navbar";
 import { Hero } from "@/components/hero/Hero";
+import { SelectedWork } from "@/components/work/SelectedWork";
+import { Playground } from "@/components/work/Playground";
+import { AboutMe } from "@/components/about/AboutMe";
+import { Services } from "@/components/services/Services";
+import { ExploreWork } from "@/components/work/ExploreWork";
+import { Footer } from "@/components/layout/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-[#f2f2f2] text-black antialiased selection:bg-black selection:text-white">
+    <HomeProvider>
+      <Loader />
       <Navbar />
-      <Hero />
-    </main>
+      <main>
+        <Hero />
+        <div className="blank-section-gap" />
+        <div className="work-scroll-section">
+          <SelectedWork />
+        </div>
+        <Playground />
+        <ExploreWork />
+        <AboutMe />
+        <Services />
+        <div className="blank-section-gap" />
+      </main>
+      <Footer />
+    </HomeProvider>
   );
 }

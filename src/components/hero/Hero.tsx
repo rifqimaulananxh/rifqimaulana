@@ -1,202 +1,292 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import SplitType from "split-type";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { useGSAP } from "@gsap/react";
+import { gsap, SplitText } from "@/lib/gsap";
+import { BRAND_IDENTITY, HERO_FEATURES } from "@/lib/constants";
 import { CurrentTime } from "./CurrentTime";
-import { CursorCrosshair } from "./CursorCrosshair";
 
 export function Hero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const curtainRef = useRef<HTMLDivElement>(null);
-  const numberRef = useRef<HTMLSpanElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
-  const line1Ref = useRef<HTMLHeadingElement>(null);
-  const line2Ref = useRef<HTMLHeadingElement>(null);
-  const bottomInfoRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const crosshairVRef = useRef<HTMLDivElement>(null);
+  const crosshairHRef = useRef<HTMLDivElement>(null);
+  const pointerImagesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const pointerIndexRef = useRef(0);
+  const lastPosRef = useRef({ x: 0, y: 0 });
+  const traveledRef = useRef(0);
+  const [featureIndex, setFeatureIndex] = useState(0);
+  const [isTouch] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+  });
 
+  // 0. Mobile feature image cycling every 1s
   useEffect(() => {
-    // 1. Function to run character reveal timeline
-    const runHeroIntro = () => {
-      if (!line1Ref.current || !line2Ref.current) return;
-
-      const splitLine1 = new SplitType(line1Ref.current, {
-        types: "words,chars",
-      });
-      const splitLine2 = new SplitType(line2Ref.current, {
-        types: "words,chars",
-      });
-
-      const introTl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      const headerEl = document.querySelector("header");
-
-      // 0.0s: Navbar slides down & fades in
-      if (headerEl) {
-        introTl.fromTo(
-          headerEl,
-          { y: -30, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8 },
-          0
-        );
-      }
-
-      // 0.15s: Small label slides up 20px
-      if (labelRef.current) {
-        introTl.fromTo(
-          labelRef.current,
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8 },
-          0.15
-        );
-      }
-
-      // 0.3s: First headline line characters slide up from 110%
-      if (splitLine1.chars && splitLine1.chars.length > 0) {
-        introTl.fromTo(
-          splitLine1.chars,
-          { y: "110%", opacity: 0 },
-          {
-            y: "0%",
-            opacity: 1,
-            duration: 1.1,
-            stagger: 0.025,
-            ease: "power4.out",
-          },
-          0.3
-        );
-      }
-
-      // 0.5s: Second headline line characters slide up from 110%
-      if (splitLine2.chars && splitLine2.chars.length > 0) {
-        introTl.fromTo(
-          splitLine2.chars,
-          { y: "110%", opacity: 0 },
-          {
-            y: "0%",
-            opacity: 1,
-            duration: 1.1,
-            stagger: 0.025,
-            ease: "power4.out",
-          },
-          0.5
-        );
-      }
-
-      // 0.8s: Bottom information slides up
-      if (bottomInfoRef.current) {
-        introTl.fromTo(
-          bottomInfoRef.current,
-          { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.8 },
-          0.8
-        );
-      }
-    };
-
-    // 2. Preloader Counter Timeline (Direct DOM Manipulation, 0 -> 100%)
-    const counterObj = { val: 0 };
-    const loaderTl = gsap.timeline();
-
-    loaderTl.to(counterObj, {
-      val: 100,
-      duration: 1.4,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        if (numberRef.current) {
-          numberRef.current.innerText = String(
-            Math.floor(counterObj.val)
-          ).padStart(2, "0");
-        }
-      },
-      onComplete: () => {
-        // Slide up preloader curtain smoothly
-        if (curtainRef.current) {
-          gsap.to(curtainRef.current, {
-            yPercent: -100,
-            duration: 0.8,
-            ease: "cubic-bezier(0.76, 0, 0.24, 1)",
-            onComplete: () => {
-              if (curtainRef.current) {
-                curtainRef.current.style.display = "none";
-              }
-            },
-          });
-        }
-        // Immediately start hero intro sequence
-        runHeroIntro();
-      },
-    });
-
-    return () => {
-      loaderTl.kill();
-    };
+    const interval = setInterval(() => {
+      setFeatureIndex((idx) => (idx + 1) % HERO_FEATURES.length);
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
+  // 1. Mouse crosshair + pointer images
+  useGSAP(
+    () => {
+      const t = sectionRef.current;
+      if (!t || isTouch) return;
+
+      const quickX = gsap.quickTo(crosshairVRef.current, "x", {
+        duration: 0.4,
+        ease: "power3.out",
+      });
+      const quickY = gsap.quickTo(crosshairHRef.current, "y", {
+        duration: 0.4,
+        ease: "power3.out",
+      });
+      const pointerXs = pointerImagesRef.current.map((el) =>
+        el ? gsap.quickTo(el, "x", { duration: 0.4, ease: "power3.out" }) : null
+      );
+      const pointerYs = pointerImagesRef.current.map((el) =>
+        el ? gsap.quickTo(el, "y", { duration: 0.4, ease: "power3.out" }) : null
+      );
+
+      const { width, height } = t.getBoundingClientRect();
+      const startX = 0.75 * width;
+      const startY = 0.3 * height;
+      gsap.set(crosshairVRef.current, { x: startX });
+      gsap.set(crosshairHRef.current, { y: startY });
+      pointerImagesRef.current.forEach((el) =>
+        el && gsap.set(el, { x: startX, y: startY })
+      );
+
+      const onMove = (o: MouseEvent) => {
+        const { left, top } = t.getBoundingClientRect();
+        const x = o.clientX - left;
+        const y = o.clientY - top;
+
+        if (lastPosRef.current.x !== 0 || lastPosRef.current.y !== 0) {
+          const dx = x - lastPosRef.current.x;
+          const dy = y - lastPosRef.current.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          traveledRef.current += dist;
+          if (traveledRef.current >= 200) {
+            const old = pointerImagesRef.current[pointerIndexRef.current];
+            if (old) {
+              gsap.killTweensOf(old, "opacity");
+              gsap.set(old, { opacity: 0 });
+            }
+            pointerIndexRef.current =
+              (pointerIndexRef.current + 1) % HERO_FEATURES.length;
+            const next = pointerImagesRef.current[pointerIndexRef.current];
+            if (next) {
+              gsap.killTweensOf(next, "opacity");
+              gsap.set(next, { opacity: 1 });
+            }
+            traveledRef.current = traveledRef.current % 200;
+          }
+        }
+        lastPosRef.current = { x, y };
+
+        quickX(x);
+        quickY(y);
+        pointerXs.forEach((fn) => fn && fn(x));
+        pointerYs.forEach((fn) => fn && fn(y));
+      };
+
+      const onEnter = () => {
+        const current = pointerImagesRef.current[pointerIndexRef.current];
+        gsap.to(
+          [crosshairHRef.current, crosshairVRef.current, current],
+          {
+            opacity: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            overwrite: "auto",
+          }
+        );
+      };
+
+      const onLeave = () => {
+        gsap.to(
+          [crosshairHRef.current, crosshairVRef.current, ...pointerImagesRef.current],
+          {
+            opacity: 0,
+            duration: 0.4,
+            ease: "power2.in",
+            overwrite: "auto",
+          }
+        );
+      };
+
+      t.addEventListener("mousemove", onMove, { passive: true });
+      t.addEventListener("mouseenter", onEnter);
+      t.addEventListener("mouseleave", onLeave);
+
+      return () => {
+        t.removeEventListener("mousemove", onMove);
+        t.removeEventListener("mouseenter", onEnter);
+        t.removeEventListener("mouseleave", onLeave);
+      };
+    },
+    { scope: sectionRef }
+  );
+
+  // 2. Intro reveal + scroll parallax
+  useGSAP(
+    () => {
+      const t = sectionRef.current;
+      if (!t) return;
+
+      const navbar = document.querySelector(".navbar");
+      const headings = t.querySelectorAll(".hero-heading");
+      const crosshairH = t.querySelector(".crosshair-h");
+      const crosshairV = t.querySelector(".crosshair-v");
+      const pointerImages = t.querySelectorAll(".pointer-image");
+      const featureWrappers = t.querySelectorAll(".feature-image-wrapper");
+      const textSmalls = t.querySelectorAll(".text-small");
+
+      gsap.set(
+        [navbar, headings, crosshairH, crosshairV, pointerImages[0], featureWrappers[0], textSmalls],
+        { opacity: 0 }
+      );
+
+      if (!isTouch) {
+        SplitText.create(headings, { type: "words" })
+          .words.forEach((word) => {
+            const chars = SplitText.create(word, { type: "chars" });
+            gsap.set(chars.chars, { yPercent: 100 });
+            gsap.to(chars.chars, {
+              yPercent: 0,
+              duration: 1,
+              stagger: 0.04,
+              ease: "power4.out",
+            });
+          });
+      }
+
+      gsap.set(headings, { opacity: 1 });
+      gsap.to(
+        [navbar, crosshairH, crosshairV, pointerImages[0], featureWrappers[0], textSmalls],
+        {
+          opacity: 1,
+          duration: 0.6,
+          delay: 1,
+          ease: "power2.out",
+        }
+      );
+
+      const heroContent = t.querySelector(".hero-content");
+      if (heroContent) {
+        const workSection = document.querySelector(".work-scroll-section");
+        const mm = gsap.matchMedia();
+        mm.add("(min-width: 1025px)", () => {
+          gsap.to(heroContent, {
+            y: -400,
+            ease: "none",
+            scrollTrigger: {
+              trigger: workSection,
+              start: "top bottom",
+              end: "top top",
+              scrub: true,
+            },
+          });
+        });
+        mm.add("(max-width: 1024px)", () => {
+          gsap.to(heroContent, {
+            y: -200,
+            ease: "none",
+            scrollTrigger: {
+              trigger: workSection,
+              start: "top bottom",
+              end: "top top",
+              scrub: true,
+            },
+          });
+        });
+      }
+    },
+    { scope: sectionRef, dependencies: [isTouch] }
+  );
+
   return (
-    <>
-      {/* Preloader Curtain (Direct DOM updated 0-100% counter) */}
-      <div
-        ref={curtainRef}
-        className="fixed inset-0 z-50 bg-[#f2f2f2] flex items-center justify-center font-mono select-none pointer-events-none"
-      >
-        <div className="flex items-baseline gap-1 text-6xl sm:text-8xl font-light tracking-tighter text-black">
-          <span ref={numberRef}>00</span>
-          <span className="text-xl sm:text-2xl text-neutral-400 font-normal">
-            %
-          </span>
-        </div>
+    <section
+      ref={sectionRef}
+      className={`home-hero-section ${isTouch ? "is-touch-device" : "is-mouse-device"}`}
+    >
+      <div ref={crosshairVRef} className="crosshair-v" />
+      <div ref={crosshairHRef} className="crosshair-h">
+        <span className="crosshair-text text-small">
+          {BRAND_IDENTITY.crosshairText}
+        </span>
       </div>
 
-      {/* Main Hero Section */}
-      <section
-        ref={containerRef}
-        className="h-screen w-full flex flex-col justify-between px-6 sm:px-10 md:px-14 pt-24 pb-8 md:pb-12 bg-[#f2f2f2] text-black relative select-none overflow-hidden"
-      >
-        {/* Interactive Mouse Crosshair Lines & Floating Preview Card */}
-        <CursorCrosshair />
-
-        {/* Top spacer pushing header/heading to bottom */}
-        <div className="flex-1" />
-
-        {/* Hero Typography & Metadata Container */}
-        <div className="w-full flex flex-col">
-          {/* Small label above headline */}
-          <div
-            ref={labelRef}
-            className="mb-2 sm:mb-3 font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase text-neutral-600"
-          >
-            [ SOFTWARE ENGINEER ]
-          </div>
-
-          {/* Line 1: BUILDING MODERN */}
-          <h1
-            ref={line1Ref}
-            className="split-line text-[7.6vw] leading-[0.85] font-light tracking-[-0.04em] uppercase text-black w-full whitespace-nowrap"
-          >
-            BUILDING MODERN
-          </h1>
-
-          {/* Line 2: Metadata (RIFQI MAULANA, CURRENT TIME) + SOFTWARE */}
-          <div className="w-full flex flex-col lg:flex-row lg:items-baseline justify-between gap-4 lg:gap-8 mt-1 lg:mt-0">
-            {/* Metadata items (Bottom left / middle) */}
-            <div
-              ref={bottomInfoRef}
-              className="flex items-center gap-12 sm:gap-16 font-mono text-[10px] sm:text-xs tracking-[0.18em] uppercase text-black shrink-0 pb-1 lg:pb-3"
-            >
-              <span className="font-medium">RIFQI MAULANA</span>
-              <CurrentTime />
-            </div>
-
-            {/* Title line 2: SOFTWARE */}
-            <h1
-              ref={line2Ref}
-              className="split-line text-[7.6vw] leading-[0.85] font-light tracking-[-0.04em] uppercase text-black lg:text-right whitespace-nowrap"
-            >
-              SOFTWARE
-            </h1>
+      {HERO_FEATURES.map((feature, i) => (
+        <div
+          key={feature.title + i}
+          ref={(el) => {
+            pointerImagesRef.current[i] = el;
+          }}
+          className="pointer-image"
+        >
+          <Image
+            src={feature.image}
+            alt={`Pointer Image ${i + 1}`}
+            fill
+            sizes="200px"
+            priority
+          />
+          <div className="pointer-text text-small">
+            [ {feature.title} ]
           </div>
         </div>
-      </section>
-    </>
+      ))}
+
+      <div className="hero-content container">
+        <div />
+
+        <div className="hero-features-mobile">
+          <div className="feature-image-wrapper">
+            <Image
+              src={HERO_FEATURES[featureIndex].image}
+              alt={HERO_FEATURES[featureIndex].title}
+              fill
+              sizes="(max-width: 1024px) 100vw, 1px"
+              priority
+              key={HERO_FEATURES[featureIndex].image}
+            />
+          </div>
+          <span className="text-small">
+            [ {HERO_FEATURES[featureIndex].title} ]
+          </span>
+        </div>
+
+        <div className="hero-big-heading">
+          <div className="upper-heading-desktop">
+            <h1 className="hero-heading">{BRAND_IDENTITY.headlineDesktop}</h1>
+          </div>
+          <div className="upper-heading-mobile">
+            <h1 className="hero-heading">{BRAND_IDENTITY.headlineMobileTop}</h1>
+            <h1 className="hero-heading">{BRAND_IDENTITY.headlineMobileBottom}</h1>
+          </div>
+
+          <div className="bottom-row">
+            <div className="left">
+              <span className="text-small">{BRAND_IDENTITY.name}</span>
+              <span className="text-small">
+                Current time: <CurrentTime /> WIB
+              </span>
+            </div>
+            <h1 className="right hero-heading">
+              {BRAND_IDENTITY.headlineRight}
+            </h1>
+          </div>
+
+          <div className="bottom-row-mobile">
+            <span className="text-small">{BRAND_IDENTITY.name}</span>
+            <span className="text-small">{BRAND_IDENTITY.role}</span>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
