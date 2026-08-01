@@ -25,30 +25,30 @@ export const BRAND_IDENTITY = {
 
 export const HERO_FEATURES = [
   {
-    image: "/images/menu/rose.png",
+    image: "/images/portofolio/porto-3.webp",
     title: "Pixel perfect execution",
   },
   {
-    image: "/images/menu/work.png",
+    image: "/images/portofolio/porto-4.webp",
     title: "High performance",
   },
   {
-    image: "/images/menu/home.png",
+    image: "/images/portofolio/porto-5.webp",
     title: "Scalable systems",
   },
   {
-    image: "/images/menu/about.png",
+    image: "/images/portofolio/porto-6.webp",
     title: "Clean architecture",
   },
 ];
 
 export const NAV_LINKS = [
-  { label: "Home", href: "/", image: "/images/menu/home.png" },
-  { label: "Work", href: "/work", image: "/images/menu/work.png" },
-  { label: "Services", href: "/services", image: "/images/menu/rose.png" },
-  { label: "FAQ", href: "/services#faq", image: "/images/menu/work.png" },
-  { label: "About me", href: "/about-me", image: "/images/menu/about.png" },
-  { label: "Contact", href: "/contact", image: "/images/menu/rose.png" },
+  { label: "Home", href: "/", image: "/images/portofolio/porto-1.webp" },
+  { label: "Work", href: "/work", image: "/images/portofolio/porto-2.webp" },
+  { label: "Services", href: "/services", image: "/images/portofolio/porto-3.webp" },
+  { label: "FAQ", href: "/services#faq", image: "/images/portofolio/porto-4.webp" },
+  { label: "About me", href: "/about-me", image: "/images/portofolio/porto-5.webp" },
+  { label: "Contact", href: "/contact", image: "/images/portofolio/porto-6.webp" },
 ];
 
 export const FOOTER_LINKS = {

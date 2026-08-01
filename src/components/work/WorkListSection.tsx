@@ -36,8 +36,11 @@ export function WorkListSection() {
     if (!list || !thumb) return;
     const ratio = list.clientWidth / list.scrollWidth;
     const width = Math.max(ratio * 100, 5);
-    const left = (list.scrollLeft / (list.scrollWidth - list.clientWidth)) *
-      (100 - width);
+    const scrollable = list.scrollWidth - list.clientWidth;
+    const left =
+      scrollable <= 0
+        ? 0
+        : (list.scrollLeft / scrollable) * (100 - width);
     thumb.style.width = `${width}%`;
     thumb.style.left = `${left}%`;
   }, []);
@@ -106,6 +109,7 @@ export function WorkListSection() {
 
   return (
     <section ref={sectionRef} className="work-list-section">
+      <h1 className="sr-only">Work</h1>
       <div className="container">
         <div className="menu-wrapper">
           <div className="work-categories">

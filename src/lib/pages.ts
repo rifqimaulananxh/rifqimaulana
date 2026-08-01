@@ -1,6 +1,8 @@
 export const SERVICES_PAGE = [
   {
     heading: "Development",
+    description:
+      "Robust, scalable systems built end to end — from database and APIs to deployment and observability.",
     items: [
       "Web Development",
       "Backend & API Development",
@@ -10,6 +12,8 @@ export const SERVICES_PAGE = [
   },
   {
     heading: "Design & Experience",
+    description:
+      "Interfaces that feel as sharp as they look — motion, interaction and detail-driven UI design.",
     items: [
       "UI / UX Design",
       "Interactive Animations (GSAP)",
@@ -18,6 +22,9 @@ export const SERVICES_PAGE = [
     ],
   },
 ];
+
+export const SERVICES_QUOTE =
+  "I build every layer myself — from concept and design to the final deployed product. Nothing gets lost in translation between teams, because there are no handoffs. Just sharp, working software that holds up once it's live.";
 
 export const FAQ_ITEMS = [
   {
@@ -61,25 +68,25 @@ export const ABOUT_PAGE = {
       title: "Music",
       description:
         "I love electronic music and occasionally produce my own beats on the side.",
-      image: "/images/menu/home.png",
+      image: "/images/portofolio/porto-6.webp",
     },
     {
       title: "Long Drive",
       description:
         "A long drive after a busy week is the best way to clear my head.",
-      image: "/images/menu/work.png",
+      image: "/images/portofolio/porto-7.webp",
     },
     {
       title: "Travel",
       description:
         "Exploring new places and cultures always recharges my creativity.",
-      image: "/images/menu/rose.png",
+      image: "/images/portofolio/unsplash.webp",
     },
     {
       title: "Football",
       description:
         "A big football fan — I never miss a weekend match.",
-      image: "/images/menu/about.png",
+      image: "/images/portofolio/porto-1.webp",
     },
   ],
 };

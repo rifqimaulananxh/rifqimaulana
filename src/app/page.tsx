@@ -1,6 +1,7 @@
 import { HomeProvider } from "@/context/HomeContext";
 import { Loader } from "@/components/loader/Loader";
 import { Hero } from "@/components/hero/Hero";
+import { MovingText } from "@/components/hero/MovingText";
 import { SelectedWork } from "@/components/work/SelectedWork";
 import { Playground } from "@/components/work/Playground";
 import { AboutMe } from "@/components/about/AboutMe";
@@ -13,6 +14,7 @@ export default function Home() {
       <Loader />
       <main>
         <Hero />
+        <MovingText />
         <div className="blank-section-gap" />
         <div className="work-scroll-section">
           <SelectedWork />

@@ -1,30 +1,42 @@
 "use client";
 
-import { useRef } from "react";
-import Image from "next/image";
+import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
-import { SERVICES_PAGE } from "@/lib/pages";
+import { gsap, SplitText } from "@/lib/gsap";
+import { SERVICES_PAGE, SERVICES_QUOTE } from "@/lib/pages";
 
 export function ServiceListSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   useGSAP(
     () => {
       const section = sectionRef.current;
       if (!section) return;
 
+      const quote = section.querySelector(".services-quote");
+      if (quote) {
+        const words = SplitText.create(quote, { type: "words" }).words;
+        gsap.set(words, { yPercent: 110 });
+        gsap.to(words, {
+          yPercent: 0,
+          duration: 1,
+          stagger: 0.02,
+          ease: "power4.out",
+          scrollTrigger: { trigger: section, start: "top 70%" },
+        });
+      }
+
       gsap.fromTo(
-        section.querySelectorAll(".service-item"),
+        section.querySelectorAll(".accordion-item"),
         { y: 40, opacity: 0 },
         {
           y: 0,
           opacity: 1,
           duration: 0.9,
-          stagger: 0.06,
+          stagger: 0.08,
           ease: "power4.out",
-          delay: 0.2,
-          scrollTrigger: { trigger: section, start: "top 70%" },
+          scrollTrigger: { trigger: section, start: "top 65%" },
         }
       );
     },
@@ -41,28 +53,49 @@ export function ServiceListSection() {
               <span className="text-small-1">What I can help you with?</span>
             </div>
           </div>
-          <span className="full-line" />
-          <div className="service-container">
-            {SERVICES_PAGE.map((col, ci) => (
-              <div key={ci} className="service-list">
-                <div className="heading text-medium">{col.heading}</div>
-                {col.items.map((item, i) => (
-                  <div key={`${ci}-${i}`} className="service-item">
-                    <div className="arrow-icon-wrapper">
-                      <Image
-                        className="arrow-icon"
-                        src="/icons/arrow.svg"
-                        alt="arrow"
-                        width={28}
-                        height={28}
-                        style={{ color: "transparent" }}
-                      />
-                    </div>
-                    <span>{item}</span>
+
+          <p className="services-quote text-medium split-n-wrap">
+            {SERVICES_QUOTE}
+          </p>
+
+          <div className="accordion-wrapper">
+            {SERVICES_PAGE.map((col, ci) => {
+              const isOpen = openIndex === ci;
+              return (
+                <div
+                  key={ci}
+                  className={`accordion-item ${isOpen ? "active" : ""}`}
+                >
+                  <div
+                    className="accordion-heading"
+                    onClick={() => setOpenIndex(isOpen ? null : ci)}
+                  >
+                    <span className="accordion-index">
+                      {String(ci + 1).padStart(2, "0")}
+                    </span>
+                    <span className="accordion-title text-medium">
+                      {col.heading}
+                    </span>
+                    <span className="accordion-toggle">+</span>
                   </div>
-                ))}
-              </div>
-            ))}
+                  <div className="accordion-body">
+                    <p className="accordion-description text-small">
+                      {col.description}
+                    </p>
+                    <ul className="accordion-list">
+                      {col.items.map((item, i) => (
+                        <li key={`${ci}-${i}`} className="text-medium">
+                          <span className="text-small-1">
+                            {String(i + 1).padStart(2, "0")}
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

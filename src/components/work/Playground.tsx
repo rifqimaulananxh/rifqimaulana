@@ -21,6 +21,7 @@ function PlaygroundItem({
 }: PlaygroundItemProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
@@ -81,7 +82,7 @@ function PlaygroundItem({
               }}
             />
           )}
-          {showVideo && !isPlaying && (
+          {showVideo && !isPlaying && !videoFailed && (
             <div
               className="video-loading-overlay"
               style={{
@@ -106,7 +107,7 @@ function PlaygroundItem({
               </span>
             </div>
           )}
-          {showVideo && (
+          {showVideo && !videoFailed && (
             <video
               ref={videoRef}
               className="video"
@@ -116,6 +117,7 @@ function PlaygroundItem({
               playsInline
               autoPlay
               onPlaying={() => setIsPlaying(true)}
+              onError={() => setVideoFailed(true)}
               style={{
                 opacity: isPlaying ? 1 : 0,
                 transition: "opacity 0.3s ease",
@@ -172,7 +174,6 @@ export function Playground() {
           );
         }
       });
-      gsap.matchMedia();
     },
     { scope: sectionRef }
   );

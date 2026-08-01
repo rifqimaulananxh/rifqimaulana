@@ -1,23 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { BRAND_IDENTITY, NAV_LINKS } from "@/lib/constants";
+import { BRAND_IDENTITY, FOOTER_LINKS, NAV_LINKS } from "@/lib/constants";
 import { navigateTo } from "@/lib/navigation";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [hoverIndex, setHoverIndex] = useState(-1);
   const pathname = usePathname();
   const menuItemsRef = useRef<HTMLUListElement>(null);
   const activeIndex = Math.max(
     0,
     NAV_LINKS.findIndex((link) => link.href.split("#")[0] === pathname)
   );
-  const previewIndex = hoverIndex >= 0 ? hoverIndex : activeIndex;
 
   useGSAP(
     () => {
@@ -61,10 +58,7 @@ export function Navbar() {
     <>
       <header className={`navbar ${isOpen ? "open" : ""}`}>
         <div className="left">
-          <span
-            className="logo"
-            onClick={() => handleNavigate("#index")}
-          >
+          <span className="logo" onClick={() => handleNavigate("#index")}>
             {BRAND_IDENTITY.logo}
           </span>
         </div>
@@ -85,33 +79,9 @@ export function Navbar() {
 
       <div className={`drawer ${isOpen ? "open" : ""}`}>
         <div className="drawer-content">
-          <div className="menu-title">
-            <div>Software</div>
-            <div>Engineer</div>
-          </div>
-
-          <div className="image-wrapper">
-            {NAV_LINKS.map((item, index) => {
-              let translateY = "100%";
-              if (index === previewIndex) translateY = "0%";
-              else if (index < previewIndex) translateY = "-100%";
-              return (
-                <div
-                  key={item.label}
-                  className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] will-change-transform"
-                  style={{ transform: `translate3d(0, ${translateY}, 0)` }}
-                >
-                  <Image
-                    src={item.image}
-                    alt={item.label}
-                    fill
-                    priority
-                    sizes="280px"
-                    className="object-cover"
-                  />
-                </div>
-              );
-            })}
+          <div className="drawer-top">
+            <span className="text-small">{BRAND_IDENTITY.label}</span>
+            <span className="text-small">MENU</span>
           </div>
 
           <ul ref={menuItemsRef} className="menu-items">
@@ -119,19 +89,44 @@ export function Navbar() {
               <li key={item.label} className="menu-item-wrapper">
                 <a
                   href={item.href}
-                  className={`menu-item ${activeIndex === index ? "active" : ""}`}
-                  onMouseEnter={() => setHoverIndex(index)}
-                  onMouseLeave={() => setHoverIndex(-1)}
+                  className={`menu-item ${
+                    activeIndex === index ? "active" : ""
+                  }`}
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavigate(item.href);
                   }}
                 >
-                  {item.label}
+                  <span className="menu-item-index">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="menu-item-label">{item.label}</span>
                 </a>
               </li>
             ))}
           </ul>
+
+          <div className="drawer-footer">
+            <div className="drawer-contact">
+              <a
+                href={`mailto:${FOOTER_LINKS.email}`}
+                className="text-small"
+              >
+                {FOOTER_LINKS.email}
+              </a>
+              <a
+                href="https://wa.me/6281234567890"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-small"
+              >
+                WhatsApp
+              </a>
+            </div>
+            <span className="text-small">
+              Based in {BRAND_IDENTITY.location}
+            </span>
+          </div>
         </div>
       </div>
     </>

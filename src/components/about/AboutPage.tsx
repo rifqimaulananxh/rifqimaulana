@@ -59,7 +59,7 @@ function AboutHeroSection() {
           <div className="image-wrapper">
             <Image
               className="hero-img"
-              src="/images/menu/about.png"
+              src="/images/portofolio/rifqi.webp"
               alt={`Image of ${ABOUT_PAGE.heading}`}
               fill
               sizes="(max-width: 1024px) 90vw, 40vw"
@@ -144,7 +144,7 @@ function HistorySection() {
                 className={`image-wrapper ${i === 0 ? "active" : ""}`}
               >
                 <Image
-                  src="/images/menu/about.png"
+                  src="/images/portofolio/rifqi.webp"
                   alt="about image"
                   fill
                   sizes="(max-width: 1024px) 70vw, 30vw"

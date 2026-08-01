@@ -71,6 +71,10 @@ export function AboutMe() {
 
   return (
     <section ref={sectionRef} className="about-me-section">
+      <div className="about-me-label-row">
+        <span className="text-small hero-label">(02)</span>
+        <span className="text-small hero-label">[ ABOUT ]</span>
+      </div>
       <div className="about-me-wrapper">
         <div className="about-me-info">
           <p className="about-me-description text-medium split-n-wrap">
@@ -83,7 +87,7 @@ export function AboutMe() {
         <div className="about-me-pic">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/menu/about.png"
+            src="/images/portofolio/rifqi.webp"
             className="display-pic"
             alt={`Image of ${BRAND_IDENTITY.name}, a software engineer specialised in web development`}
             width="100%"

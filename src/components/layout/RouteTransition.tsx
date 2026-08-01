@@ -95,7 +95,7 @@ export function RouteTransition() {
 
     const panel = panelRef.current;
     if (panel) {
-      window.setTimeout(() => {
+      const timeoutId = window.setTimeout(() => {
         gsap.to(panel, {
           top: "100%",
           duration: 0.9,
@@ -107,6 +107,7 @@ export function RouteTransition() {
           },
         });
       }, 400);
+      return () => window.clearTimeout(timeoutId);
     }
   }, [pathname]);
 
