@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getLenis } from "@/hooks/useLenis";
+import { getLenis, whenLenisReady } from "@/hooks/useLenis";
 import type { Project } from "@/lib/projects";
 
 interface WorkModalProps {
@@ -37,18 +37,17 @@ export function WorkModal({
     return () => clearInterval(interval);
   }, [work]);
 
-  const lenis = getLenis();
-
   useEffect(() => {
     const timeout = setTimeout(() => setActive(true), 10);
     document.body.style.overflow = "hidden";
-    lenis?.stop();
+    const unsub = whenLenisReady((lenis) => lenis.stop());
     return () => {
       clearTimeout(timeout);
       document.body.style.overflow = "";
-      lenis?.start();
+      unsub();
+      getLenis()?.start();
     };
-  }, [lenis]);
+  }, []);
 
   if (!work) return null;
 

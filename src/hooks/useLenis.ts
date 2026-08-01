@@ -5,9 +5,21 @@ import Lenis from "lenis";
 import { ScrollTrigger } from "@/lib/gsap";
 
 let lenisInstance: Lenis | null = null;
+const lenisReadyCallbacks = new Set<(lenis: Lenis) => void>();
 
 export function getLenis() {
   return lenisInstance;
+}
+
+export function whenLenisReady(cb: (lenis: Lenis) => void) {
+  if (lenisInstance) {
+    cb(lenisInstance);
+    return () => {};
+  }
+  lenisReadyCallbacks.add(cb);
+  return () => {
+    lenisReadyCallbacks.delete(cb);
+  };
 }
 
 export function useLenis() {
@@ -18,6 +30,8 @@ export function useLenis() {
       smoothWheel: true,
     });
     lenisInstance = lenis;
+    lenisReadyCallbacks.forEach((cb) => cb(lenis));
+    lenisReadyCallbacks.clear();
 
     lenis.on("scroll", ScrollTrigger.update);
 
