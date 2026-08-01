@@ -12,6 +12,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     image: ["/images/menu/home.png"],
     bgMediaUrl: "/images/menu/home.png",
     type: "Playground",
+    category: "playground",
   },
   {
     id: "3d-scroll",
@@ -24,6 +25,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     image: ["/images/menu/work.png"],
     bgMediaUrl: "/images/menu/work.png",
     type: "Playground",
+    category: "playground",
   },
   {
     id: "hover-effect",
@@ -36,6 +38,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     image: ["/images/menu/rose.png"],
     bgMediaUrl: "/images/menu/rose.png",
     type: "Playground",
+    category: "playground",
   },
   {
     id: "immersive-sphere",
@@ -48,6 +51,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     image: ["/images/menu/about.png"],
     bgMediaUrl: "/images/menu/about.png",
     type: "Playground",
+    category: "playground",
   },
   {
     id: "svg-path",
@@ -60,6 +64,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     image: ["/images/menu/work.png"],
     bgMediaUrl: "/images/menu/work.png",
     type: "Playground",
+    category: "playground",
   },
   {
     id: "scroll-video",
@@ -72,5 +77,6 @@ export const PLAYGROUND_ITEMS: Project[] = [
     image: ["/images/menu/home.png"],
     bgMediaUrl: "/images/menu/home.png",
     type: "Playground",
+    category: "playground",
   },
 ];

@@ -76,7 +76,7 @@ export function AboutMe() {
           <p className="about-me-description text-medium split-n-wrap">
             {HOME_DESCRIPTION}
           </p>
-          <Link href="#about" className="know-more">
+          <Link href="/about-me" className="know-more">
             [Know More]
           </Link>
         </div>

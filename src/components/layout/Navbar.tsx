@@ -2,15 +2,22 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { BRAND_IDENTITY, NAV_LINKS } from "@/lib/constants";
-import { scrollToTarget } from "@/hooks/useLenis";
+import { navigateTo } from "@/lib/navigation";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [hoverIndex, setHoverIndex] = useState(-1);
+  const pathname = usePathname();
   const menuItemsRef = useRef<HTMLUListElement>(null);
+  const activeIndex = Math.max(
+    0,
+    NAV_LINKS.findIndex((link) => link.href.split("#")[0] === pathname)
+  );
+  const previewIndex = hoverIndex >= 0 ? hoverIndex : activeIndex;
 
   useGSAP(
     () => {
@@ -47,10 +54,7 @@ export function Navbar() {
 
   const handleNavigate = (href: string) => {
     setIsOpen(false);
-    // smooth-scroll to anchor when on the same page
-    if (href.startsWith("#")) {
-      setTimeout(() => scrollToTarget(href), 700);
-    }
+    navigateTo(href);
   };
 
   return (
@@ -89,8 +93,8 @@ export function Navbar() {
           <div className="image-wrapper">
             {NAV_LINKS.map((item, index) => {
               let translateY = "100%";
-              if (index === activeIndex) translateY = "0%";
-              else if (index < activeIndex) translateY = "-100%";
+              if (index === previewIndex) translateY = "0%";
+              else if (index < previewIndex) translateY = "-100%";
               return (
                 <div
                   key={item.label}
@@ -116,7 +120,8 @@ export function Navbar() {
                 <a
                   href={item.href}
                   className={`menu-item ${activeIndex === index ? "active" : ""}`}
-                  onMouseEnter={() => setActiveIndex(index)}
+                  onMouseEnter={() => setHoverIndex(index)}
+                  onMouseLeave={() => setHoverIndex(-1)}
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavigate(item.href);

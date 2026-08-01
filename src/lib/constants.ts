@@ -43,12 +43,12 @@ export const HERO_FEATURES = [
 ];
 
 export const NAV_LINKS = [
-  { label: "Home", href: "#index", image: "/images/menu/home.png" },
-  { label: "Work", href: "#work", image: "/images/menu/work.png" },
-  { label: "Services", href: "#Services", image: "/images/menu/rose.png" },
-  { label: "FAQ", href: "#Services#faq", image: "/images/menu/work.png" },
-  { label: "About me", href: "#about", image: "/images/menu/about.png" },
-  { label: "Contact", href: "#contact", image: "/images/menu/rose.png" },
+  { label: "Home", href: "/", image: "/images/menu/home.png" },
+  { label: "Work", href: "/work", image: "/images/menu/work.png" },
+  { label: "Services", href: "/services", image: "/images/menu/rose.png" },
+  { label: "FAQ", href: "/services#faq", image: "/images/menu/work.png" },
+  { label: "About me", href: "/about-me", image: "/images/menu/about.png" },
+  { label: "Contact", href: "/contact", image: "/images/menu/rose.png" },
 ];
 
 export const FOOTER_LINKS = {
@@ -57,3 +57,13 @@ export const FOOTER_LINKS = {
   linkedin: "https://www.linkedin.com/",
   instagram: "https://www.instagram.com/",
 };
+
+export const WORK_CATEGORIES = [
+  { label: "All Works", key: "all" },
+  { label: "[ React / Next.JS ]", key: "web" },
+  { label: "[ Node.js ]", key: "backend" },
+  { label: "[ UI / UX ]", key: "design" },
+  { label: "[ Playground ]", key: "playground" },
+];
+
+export const WORK_CATEGORY_KEYS = WORK_CATEGORIES.map((c) => c.key);

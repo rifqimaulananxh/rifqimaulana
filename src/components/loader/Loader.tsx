@@ -6,8 +6,7 @@ import { useGSAP } from "@gsap/react";
 import { useHomeContext } from "@/context/HomeContext";
 import { getLenis } from "@/hooks/useLenis";
 import { HERO_IMAGES_TO_PRELOAD } from "@/lib/site";
-
-let hasLoadedOnce = false;
+import { loaderSession } from "@/lib/loaderSession";
 
 function RotatingDigit({ digit }: { digit: string }) {
   const columnRef = useRef<HTMLDivElement>(null);
@@ -59,15 +58,15 @@ function AnimatedNumber({ value }: { value: number }) {
 
 export function Loader() {
   const { setIsHomePageLoading } = useHomeContext();
-  const [isLoading, setIsLoading] = useState(!hasLoadedOnce);
+  const [isLoading, setIsLoading] = useState(
+    () => !loaderSession.loadedOnce && !loaderSession.mountedOnce
+  );
   const [count, setCount] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (hasLoadedOnce) {
-      setIsHomePageLoading(false);
-    }
-  }, [setIsHomePageLoading]);
+    loaderSession.mountedOnce = true;
+  }, []);
 
   useEffect(() => {
     const lenis = getLenis();
@@ -79,7 +78,7 @@ export function Loader() {
 
   useGSAP(
     () => {
-      if (hasLoadedOnce || !containerRef.current) return;
+      if (loaderSession.loadedOnce || !containerRef.current) return;
       document.body.style.overflow = "hidden";
 
       const counter = { value: 0 };
@@ -99,7 +98,7 @@ export function Loader() {
             document.body.style.overflow = "";
             setIsLoading(false);
             setIsHomePageLoading(false);
-            hasLoadedOnce = true;
+            loaderSession.loadedOnce = true;
           },
         });
       };

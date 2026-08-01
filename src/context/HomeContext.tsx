@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { loaderSession } from "@/lib/loaderSession";
 
 interface HomeContextValue {
   isHomePageLoading: boolean;
@@ -10,7 +11,9 @@ interface HomeContextValue {
 const HomeContext = createContext<HomeContextValue | undefined>(undefined);
 
 export function HomeProvider({ children }: { children: ReactNode }) {
-  const [isHomePageLoading, setIsHomePageLoading] = useState(true);
+  const [isHomePageLoading, setIsHomePageLoading] = useState(
+    () => !loaderSession.loadedOnce
+  );
 
   return (
     <HomeContext.Provider value={{ isHomePageLoading, setIsHomePageLoading }}>

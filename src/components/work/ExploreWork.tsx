@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { scrollToTarget } from "@/hooks/useLenis";
+import { navigateTo } from "@/lib/navigation";
 
 export function ExploreWork() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -37,7 +37,7 @@ export function ExploreWork() {
     <section ref={sectionRef} className="work-scroll-section">
       <div
         className="explore-link"
-        onClick={() => scrollToTarget("#work")}
+        onClick={() => navigateTo("/work")}
         style={{ cursor: "pointer" }}
       >
         <span className="explore-text">Explore all work</span>

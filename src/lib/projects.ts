@@ -10,6 +10,7 @@ export interface Project {
   image: string[];
   bgMediaUrl: string;
   type: WorkType;
+  category: "web" | "backend" | "design" | "playground";
 }
 
 export const SELECTED_WORKS: Project[] = [
@@ -28,6 +29,7 @@ export const SELECTED_WORKS: Project[] = [
     ],
     bgMediaUrl: "/images/projects/modevelle_bg.jpg",
     type: "Project",
+    category: "web",
   },
   {
     id: "mad-world",
@@ -44,6 +46,7 @@ export const SELECTED_WORKS: Project[] = [
     ],
     bgMediaUrl: "/images/menu/work.png",
     type: "Project",
+    category: "web",
   },
   {
     id: "aura-os",
@@ -60,6 +63,7 @@ export const SELECTED_WORKS: Project[] = [
     ],
     bgMediaUrl: "/images/menu/about.png",
     type: "Project",
+    category: "design",
   },
   {
     id: "pulse-ai",
@@ -76,5 +80,6 @@ export const SELECTED_WORKS: Project[] = [
     ],
     bgMediaUrl: "/images/menu/rose.png",
     type: "Project",
+    category: "design",
   },
 ];

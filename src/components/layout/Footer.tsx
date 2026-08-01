@@ -3,11 +3,14 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FOOTER_LINKS, NAV_LINKS } from "@/lib/constants";
 import { scrollToTarget } from "@/hooks/useLenis";
+import { navigateTo } from "@/lib/navigation";
 
 export function Footer() {
   const [timeStr, setTimeStr] = useState("--:--:--");
+  const pathname = usePathname();
 
   useEffect(() => {
     const updateClock = () => {
@@ -27,7 +30,7 @@ export function Footer() {
   }, []);
 
   const navigate = (href: string) => {
-    if (href.startsWith("#")) scrollToTarget(href);
+    navigateTo(href);
   };
 
   return (
@@ -35,10 +38,10 @@ export function Footer() {
       <div className="footer-wrapper container">
         <a
           className="lets-work-together"
-          href="#contact"
+          href="/contact"
           onClick={(e) => {
             e.preventDefault();
-            navigate("#contact");
+            navigate("/contact");
           }}
         >
           <span className="text-large title">Let&apos;s work together</span>
@@ -48,11 +51,11 @@ export function Footer() {
         <div className="footer-bottom">
           <div className="page-navigation">
             {NAV_LINKS.filter((link) => link.label !== "Contact").map(
-              (link, i) => (
+              (link) => (
                 <a
                   key={link.label}
                   className={`text-medium navigation-link ${
-                    i === 0 ? "active" : ""
+                    pathname === link.href.split("#")[0] ? "active" : ""
                   }`}
                   href={link.href}
                   onClick={(e) => {

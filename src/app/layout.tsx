@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Jost, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { RouteTransition } from "@/components/layout/RouteTransition";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 
 const jost = Jost({
   variable: "--font-jost",
@@ -30,7 +33,12 @@ export default function RootLayout({
       className={`${jost.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[#f2f2f2] text-black">
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <RouteTransition />
+          <Navbar />
+          {children}
+          <Footer />
+        </SmoothScroll>
       </body>
     </html>
   );
