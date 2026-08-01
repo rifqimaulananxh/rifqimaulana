@@ -407,37 +407,6 @@ textarea {
 }
 
 /* ============================================================
-   LOADER
-   ============================================================ */
-.loader-container {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background-color: var(--primary);
-  color: var(--secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.animated-number {
-  display: flex;
-  align-items: baseline;
-  overflow: hidden;
-}
-.rotating-digit-container {
-  overflow: hidden;
-  height: 1em;
-}
-.rotating-digit-column {
-  display: flex;
-  flex-direction: column;
-}
-.rotating-digit {
-  height: 1em;
-  line-height: 1;
-}
-
-/* ============================================================
    HERO
    ============================================================ */
 .home-hero-section {
@@ -1699,10 +1668,21 @@ textarea {
 }
 .scroll-thumb {
   cursor: grab;
-  background-color: var(--secondary);
   position: absolute;
   top: -10px;
   bottom: -10px;
+}
+.scroll-thumb:after {
+  content: "";
+  background-color: var(--secondary);
+  height: 2px;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+}
+.scroll-thumb:active {
+  cursor: grabbing;
 }
 @media (max-width: 1024px) {
   .work-list-section {
@@ -2297,6 +2277,16 @@ textarea {
   gap: 64px;
   display: flex;
 }
+.contact-form .page-3-wrapper {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.contact-form .page-3-wrapper .success-message {
+  font-size: var(--form-text-size);
+  letter-spacing: 0.02em;
+  font-weight: 400;
+}
 .contact-form .page-1-wrapper .input-wrapper {
   flex-direction: column;
   gap: 8px;
@@ -2462,11 +2452,10 @@ textarea {
   overflow: hidden;
 }
 .moving-text-section .exp-wrap {
-  --exp-grid-col: 45em;
+  --exp-grid-col: 35em;
   --exp-grid-row: 10em;
-  --exp-grid-dot: 6em;
+  --exp-grid-dot: 8.5em;
   --gap-s: 0.75em;
-  font-size: 0.4em;
   position: relative;
 }
 .moving-text-section .exp-bg {
@@ -2551,25 +2540,43 @@ textarea {
 }
 .moving-text-section .exp-content__word {
   letter-spacing: -0.05em;
-  font-size: 9em;
-  font-weight: 300;
+  font-size: 12.5em;
+  font-weight: 700;
   line-height: 0.8;
   white-space: nowrap;
+}
+@media (max-width: 991px) {
+  .moving-text-section .exp-content__word {
+    font-size: 10em;
+  }
 }
 @media (max-width: 767px) {
   .moving-text-section {
     padding: 48px 0;
   }
   .moving-text-section .exp-wrap {
-    font-size: 0.3em;
+    font-size: 0.4em;
   }
+  .moving-text-section .exp-content__word {
+    font-size: 12.5em;
+  }
+  .moving-text-section .exp-bg__row,
   .moving-text-section .exp-content__row {
-    padding-left: calc(var(--exp-grid-col) / 2 + 1em);
+    height: 13em;
   }
   .moving-text-section .exp-content__col {
     width: calc(var(--exp-grid-col) + 1em);
   }
   .moving-text-section .exp-content__el {
     margin-top: 1.5em;
+  }
+  .moving-text-section .exp-lines__cover {
+    width: calc(var(--exp-grid-col) / 2 + 2em);
+    left: -2em;
+  }
+}
+@media (max-width: 479px) {
+  .moving-text-section .exp-wrap {
+    font-size: 0.3em;
   }
 }

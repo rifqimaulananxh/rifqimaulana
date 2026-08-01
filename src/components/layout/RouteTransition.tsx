@@ -79,6 +79,7 @@ export function RouteTransition() {
     const lenis = getLenis();
     const hash = consumePendingHash();
 
+    lenis?.start();
     if (lenis) {
       if (hash) {
         lenis.scrollTo(`#${hash}`, { duration: 1.2 });
@@ -103,12 +104,12 @@ export function RouteTransition() {
           onComplete: () => {
             gsap.set(panel, { visibility: "hidden" });
             navigatingRef.current = false;
-            lenis?.start();
           },
         });
       }, 400);
       return () => window.clearTimeout(timeoutId);
     }
+    navigatingRef.current = false;
   }, [pathname]);
 
   return (

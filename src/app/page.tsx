@@ -1,5 +1,4 @@
 import { HomeProvider } from "@/context/HomeContext";
-import { Loader } from "@/components/loader/Loader";
 import { Hero } from "@/components/hero/Hero";
 import { MovingText } from "@/components/hero/MovingText";
 import { SelectedWork } from "@/components/work/SelectedWork";
@@ -11,7 +10,6 @@ import { ExploreWork } from "@/components/work/ExploreWork";
 export default function Home() {
   return (
     <HomeProvider>
-      <Loader />
       <main>
         <Hero />
         <MovingText />

@@ -9,9 +9,10 @@ import { CONTACT_BUDGETS } from "@/lib/pages";
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function ContactPage() {
-  const [page, setPage] = useState<1 | 2>(1);
+  const [page, setPage] = useState<1 | 2 | 3>(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
   const [message, setMessage] = useState("");
   const [budgets, setBudgets] = useState<string[]>([]);
   const [error, setError] = useState("");
@@ -73,9 +74,10 @@ export function ContactPage() {
   const sendRequest = () => {
     const subject = encodeURIComponent(`Project inquiry from ${name}`);
     const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\n${message}\n\nBudget: ${budgets.join(", ") || "Not specified"}`
+      `Name: ${name}\nEmail: ${email}\nCompany: ${company || "Not specified"}\n\n${message}\n\nBudget: ${budgets.join(", ") || "Not specified"}`
     );
     window.location.href = `mailto:${FOOTER_LINKS.email}?subject=${subject}&body=${body}`;
+    setPage(3);
   };
 
   return (
@@ -83,7 +85,7 @@ export function ContactPage() {
       <div className="container">
         <div className="header-wrapper">
           <div className="title">
-            <h1># Get in touch</h1>
+            <h1>Get in touch</h1>
           </div>
           <div className="contact-links">
             <div className="link-wrapper">
@@ -101,7 +103,7 @@ export function ContactPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                WhatsApp
+                Chat in Whatsapp
               </a>
             </div>
           </div>
@@ -115,10 +117,13 @@ export function ContactPage() {
           >
             {page === 1 ? (
               <div className="page-1-wrapper">
+                <label className="text-medium">
+                  Let&apos;s start a conversation
+                </label>
                 <div className="input-wrapper">
                   <input
                     type="text"
-                    placeholder="Name"
+                    placeholder="Your name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -131,6 +136,14 @@ export function ContactPage() {
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    placeholder="Company name (optional)"
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                  />
+                </div>
                 <div className="button-wrapper">
                   <button className="next-step" onClick={goToNext}>
                     Next step
@@ -140,7 +153,7 @@ export function ContactPage() {
                   )}
                 </div>
               </div>
-            ) : (
+            ) : page === 2 ? (
               <div className="page-2-wrapper">
                 <button
                   className="back-btn"
@@ -174,6 +187,12 @@ export function ContactPage() {
                 <button className="send-request" onClick={sendRequest}>
                   Send request
                 </button>
+              </div>
+            ) : (
+              <div className="page-3-wrapper">
+                <span className="success-message">
+                  Thanks for reaching out! I&apos;ll get back to you shortly.
+                </span>
               </div>
             )}
           </form>

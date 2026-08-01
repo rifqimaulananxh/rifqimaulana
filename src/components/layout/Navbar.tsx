@@ -58,7 +58,7 @@ export function Navbar() {
     <>
       <header className={`navbar ${isOpen ? "open" : ""}`}>
         <div className="left">
-          <span className="logo" onClick={() => handleNavigate("#index")}>
+          <span className="logo" onClick={() => handleNavigate("/")}>
             {BRAND_IDENTITY.logo}
           </span>
         </div>
