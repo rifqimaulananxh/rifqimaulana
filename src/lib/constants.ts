@@ -54,8 +54,7 @@ export const NAV_LINKS = [
 export const FOOTER_LINKS = {
   email: "rifqimaulana.dev@gmail.com",
   whatsapp: "Quick chat",
-  linkedin: "https://www.linkedin.com/",
-  instagram: "https://www.instagram.com/",
+  whatsappNumber: "6281234567890",
 };
 
 export const WORK_CATEGORIES = [

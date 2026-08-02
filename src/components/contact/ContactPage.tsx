@@ -99,7 +99,7 @@ export function ContactPage() {
             <div className="link-wrapper">
               <a
                 className="whatsapp text-medium"
-                href="https://wa.me/6281234567890?text=START%20CHAT%0ATap%20send%20to%20initiate%20the%20conversation."
+                href={`https://wa.me/${FOOTER_LINKS.whatsappNumber}?text=START%20CHAT%0ATap%20send%20to%20initiate%20the%20conversation.`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

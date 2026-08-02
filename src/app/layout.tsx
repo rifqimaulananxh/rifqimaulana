@@ -57,9 +57,9 @@ export const metadata: Metadata = {
       "Software engineer crafting robust, high performance web solutions — front-end, back-end and everything in between.",
     images: [
       {
-        url: "/images/portofolio/rifqi.webp",
-        width: 741,
-        height: 1600,
+        url: "/og.png",
+        width: 1200,
+        height: 630,
         alt: "Rifqi Maulana — Software Engineer",
       },
     ],
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     title: "Rifqi Maulana — Software Engineer",
     description:
       "Software engineer crafting robust, high performance web solutions.",
-    images: ["/images/portofolio/rifqi.webp"],
+    images: ["/og.png"],
   },
   robots: {
     index: true,

@@ -9,9 +9,20 @@ export const metadata: Metadata = {
     canonical: "/about-me",
   },
   openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/about-me",
+    siteName: "Rifqi Maulana",
     title: "About Me — Rifqi Maulana",
     description: "The journey, background and formula behind Rifqi Maulana.",
-    url: "/about-me",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "About Me — Rifqi Maulana",
+      },
+    ],
   },
 };
 

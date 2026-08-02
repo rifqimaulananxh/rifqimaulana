@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rifqi Maulana — Portfolio
 
-## Getting Started
+Personal portfolio and software engineering showcase for [rifqimaulana.dev](https://rifqimaulana.dev).
 
-First, run the development server:
+## Pages
+
+- **Home** — hero, featured work, services overview
+- **Work** — selected projects, categorized (web / backend / design / playground)
+- **Services** — offerings + FAQ
+- **About Me** — background and how I work
+- **Contact** — email + WhatsApp inquiry form
+
+## Stack
+
+- **Next.js 16** (App Router, Turbopack) — fully static, SSG
+- **React 19** + **TypeScript** (strict)
+- **Tailwind CSS v4**
+- **GSAP** + **@gsap/react** + **SplitText** — scroll-driven animations
+- **Lenis** — smooth scrolling
+- **Motion** (Framer Motion) — route transitions
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev        # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm lint       # eslint
+pnpm build      # production build (SSG)
+pnpm start      # serve the production build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Dev-only config
 
-## Learn More
+Optional `DEV_ORIGIN` env var opens the dev server to other devices on the
+same network (e.g. testing on your phone). See `.env.example`.
 
-To learn more about Next.js, take a look at the following resources:
+## Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Fully static — deploy the `pnpm build` output to any static host (Vercel,
+Netlify, Cloudflare Pages). Add the `rifqimaulana.dev` domain in your host's
+DNS settings.
