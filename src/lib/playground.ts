@@ -5,7 +5,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "depth-scroll",
     title: "Depth Scroll",
     description:
-      "Gallery display where images are placed in z-axis for realistic 3d feel",
+      "A gallery where images are arranged along the z-axis to create a convincing 3D effect.",
     tags: "EXPERIMENT",
     role: "WebGL / Three.js",
     href: "#depth-scroll",
@@ -18,7 +18,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "3d-scroll",
     title: "3D Scroll",
     description:
-      "Scroll animation where a 3D model changes its sizes and position according to scroll",
+      "A scroll-driven animation where a 3D model changes size and position as you scroll.",
     tags: "EXPERIMENT",
     role: "Three.js",
     href: "#3d-scroll",
@@ -31,7 +31,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "hover-effect",
     title: "Hover Effect",
     description:
-      "A hover effect that dynamically changes the background image, featuring an infinite scroll.",
+      "A hover interaction that changes the background image while the gallery loops continuously.",
     tags: "EXPERIMENT",
     role: "GSAP",
     href: "#hover-effect",
@@ -44,7 +44,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "immersive-sphere",
     title: "Immersive Sphere",
     description:
-      "An interactive 2D sphere that provides a realistic 3D feel.",
+      "A 2D canvas sphere designed to create a convincing 3D illusion.",
     tags: "EXPERIMENT",
     role: "Canvas 2D",
     href: "#immersive-sphere",
@@ -57,7 +57,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "svg-path",
     title: "SVG Path",
     description:
-      "A scroll-driven SVG path animation that reveals content throughout the page.",
+      "A scroll-driven SVG animation that reveals content as you move through the page.",
     tags: "EXPERIMENT",
     role: "GSAP ScrollTrigger",
     href: "#svg-path",
@@ -70,7 +70,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "scroll-video",
     title: "Scroll Video",
     description:
-      "Turned a video into scroll animation. The video seems to be played on scroll.",
+      "A scroll-driven video animation that scrubs through footage as you scroll.",
     tags: "EXPERIMENT",
     role: "GSAP ScrollTrigger",
     href: "#scroll-video",

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { SELECTED_WORKS } from "@/lib/projects";
+import { navigateTo } from "@/lib/navigation";
 import { WorkItem } from "./WorkItem";
 import { WorkModal } from "./WorkModal";
 
@@ -192,23 +193,43 @@ export function SelectedWork() {
   );
 
   return (
-    <section ref={sectionRef} className="selected-work">
-      {SELECTED_WORKS.map((work, i) => (
-        <WorkItem
-          key={work.id || i}
-          item={work}
-          index={i}
-          onClick={() => setSelectedIndex(i)}
-        />
-      ))}
-      {selectedIndex !== null && (
-        <WorkModal
-          selectedWorkIndex={selectedIndex}
-          workList={SELECTED_WORKS}
-          onClose={() => setSelectedIndex(null)}
-          onIndexChange={setSelectedIndex}
-        />
-      )}
-    </section>
+    <>
+      <section ref={sectionRef} className="selected-work">
+        <div className="selected-work-header container">
+          <span className="text-small-1">Selected projects</span>
+          <span className="text-small">Web products / Interfaces / Systems</span>
+        </div>
+        {SELECTED_WORKS.map((work, i) => (
+          <WorkItem
+            key={work.id || i}
+            item={work}
+            index={i}
+            onClick={() => setSelectedIndex(i)}
+          />
+        ))}
+        {selectedIndex !== null && (
+          <WorkModal
+            selectedWorkIndex={selectedIndex}
+            workList={SELECTED_WORKS}
+            onClose={() => setSelectedIndex(null)}
+            onIndexChange={setSelectedIndex}
+          />
+        )}
+      </section>
+      <div
+        className="explore-link"
+        onClick={() => navigateTo("/work")}
+        role="link"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            navigateTo("/work");
+          }
+        }}
+      >
+        <span className="explore-text">View all projects</span>
+      </div>
+    </>
   );
 }

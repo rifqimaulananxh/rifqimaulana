@@ -49,7 +49,7 @@ export const WorkItem = memo(function WorkItem({
           style={{ cursor: "pointer" }}
         >
           <h2 className="title">{item.title}</h2>
-          <span className="bracket-button">[Open]</span>
+           <span className="bracket-button">[View details]</span>
         </div>
         <div className="work-detail">
           <label className="tag text-small">{item.tags}</label>

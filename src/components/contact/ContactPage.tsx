@@ -99,11 +99,11 @@ export function ContactPage() {
             <div className="link-wrapper">
               <a
                 className="whatsapp text-medium"
-                href={`https://wa.me/${FOOTER_LINKS.whatsappNumber}?text=START%20CHAT%0ATap%20send%20to%20initiate%20the%20conversation.`}
+                href={`https://wa.me/${FOOTER_LINKS.whatsappNumber}?text=${encodeURIComponent("Hi Rifqi, I would like to discuss a project.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Chat in Whatsapp
+                Chat on WhatsApp
               </a>
             </div>
           </div>
@@ -139,13 +139,13 @@ export function ContactPage() {
                 <div className="input-wrapper">
                   <input
                     type="text"
-                    placeholder="Company name (optional)"
+                    placeholder="Company or project name (optional)"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                   />
                 </div>
                 <div className="button-wrapper">
-                  <button className="next-step" onClick={goToNext}>
+                  <button type="button" className="next-step" onClick={goToNext}>
                     Next step
                   </button>
                   {error && (
@@ -157,6 +157,7 @@ export function ContactPage() {
               <div className="page-2-wrapper">
                 <button
                   className="back-btn"
+                  type="button"
                   onClick={() => setPage(1)}
                 >
                   Back
@@ -169,7 +170,7 @@ export function ContactPage() {
                     onChange={(e) => setMessage(e.target.value)}
                   />
                   <div className="budgets">
-                    <div className="budget-title">Select budget range</div>
+                    <div className="budget-title">Approximate budget (USD)</div>
                     <div className="check-container">
                       {CONTACT_BUDGETS.map((budget) => (
                         <label key={budget} className="checkbox-label">
@@ -184,14 +185,14 @@ export function ContactPage() {
                     </div>
                   </div>
                 </div>
-                <button className="send-request" onClick={sendRequest}>
-                  Send request
+                <button type="button" className="send-request" onClick={sendRequest}>
+                  Open email draft
                 </button>
               </div>
             ) : (
               <div className="page-3-wrapper">
                 <span className="success-message">
-                  Thanks for reaching out! I&apos;ll get back to you shortly.
+                  Your email draft is ready. Send it to complete your inquiry.
                 </span>
               </div>
             )}

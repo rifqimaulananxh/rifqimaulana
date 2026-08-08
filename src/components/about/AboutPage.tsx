@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { ABOUT_PAGE } from "@/lib/pages";
-import { FaqSection } from "@/components/services/FaqSection";
 
 function AboutHeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -69,9 +68,8 @@ function AboutHeroSection() {
           <p className="description text-medium split-n-wrap">
             {ABOUT_PAGE.description}{" "}
             <Link href="/contact" className="let-s-collaborate">
-              Let&apos;s collaborate
-            </Link>{" "}
-            and build something that makes your business grow.
+              Tell me what you&apos;re building.
+            </Link>
           </p>
           <span className="scroll-text bracket-button">[Scroll]</span>
         </div>
@@ -178,8 +176,18 @@ function BeyondWorkSection() {
       const track = trackRef.current;
       if (!track) return;
 
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      const firstItem = track.children[0] as HTMLElement | undefined;
+      const duplicateStart = track.children[ABOUT_PAGE.hobbies.length] as
+        | HTMLElement
+        | undefined;
       const distance = () =>
-        track.scrollWidth / 2 - track.offsetWidth / 2;
+        firstItem && duplicateStart
+          ? duplicateStart.offsetLeft - firstItem.offsetLeft
+          : track.scrollWidth / 2;
 
       const tween = gsap.to(track, {
         x: () => -distance(),
@@ -239,7 +247,6 @@ export function AboutPage() {
       <AboutHeroSection />
       <HistorySection />
       <BeyondWorkSection />
-      <FaqSection />
     </main>
   );
 }

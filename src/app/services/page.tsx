@@ -5,7 +5,7 @@ import { FaqSection } from "@/components/services/FaqSection";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Full-stack software engineering services by Rifqi Maulana — web development, backend & API design, UI/UX, interactive GSAP animations and cloud infrastructure.",
+    "Capabilities by Rifqi Maulana: product interfaces, web applications, backend APIs, data and cloud infrastructure, performance, and interaction design.",
   alternates: {
     canonical: "/services",
   },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     siteName: "Rifqi Maulana",
     title: "Services — Rifqi Maulana",
     description:
-      "Web development, backend, UI/UX and interactive animation services.",
+      "Product interfaces, web applications, backend APIs, and thoughtful interaction design.",
     images: [
       {
         url: "/og.png",

@@ -26,6 +26,7 @@ function PlaygroundItem({
   const [isTouch, setIsTouch] = useState(false);
   const itemRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hasVideo = /\.(mp4|webm|ogg)$/i.test(item.bgMediaUrl);
 
   useEffect(() => {
     const check = () => {
@@ -41,22 +42,16 @@ function PlaygroundItem({
   }, []);
 
   useEffect(() => {
-    if (!isTouch || !itemRef.current) return;
+    if (!hasVideo || !isTouch || !itemRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => setIsVisible(entry.isIntersecting),
       { rootMargin: "0px", threshold: 0.15 }
     );
     observer.observe(itemRef.current);
     return () => observer.disconnect();
-  }, [isTouch]);
+  }, [hasVideo, isTouch]);
 
-  const showVideo = isTouch ? isVisible : isHovered;
-
-  const [prevShowVideo, setPrevShowVideo] = useState(showVideo);
-  if (showVideo !== prevShowVideo) {
-    setPrevShowVideo(showVideo);
-    if (!showVideo) setIsPlaying(false);
-  }
+  const showVideo = hasVideo && (isTouch ? isVisible : isHovered);
 
   return (
     <div ref={itemRef} className="playground-grid-item">
@@ -147,11 +142,15 @@ function PlaygroundItem({
   );
 }
 
-export function Playground() {
+export function Playground({ limit }: { limit?: number }) {
   const [selectedModalIndex, setSelectedModalIndex] = useState<number | null>(
     null
   );
   const sectionRef = useRef<HTMLElement>(null);
+  const items =
+    typeof limit === "number"
+      ? PLAYGROUND_ITEMS.slice(0, limit)
+      : PLAYGROUND_ITEMS;
 
   useGSAP(
     () => {
@@ -186,7 +185,7 @@ export function Playground() {
           <span className="text-small-1">Experiments / Animations / 3D</span>
         </div>
         <div className="playground-content-grid">
-          {PLAYGROUND_ITEMS.map((item, i) => (
+          {items.map((item, i) => (
             <PlaygroundItem
               key={item.id ? `${item.id}-${i}` : i}
               item={item}
@@ -199,7 +198,7 @@ export function Playground() {
       {selectedModalIndex !== null && (
         <WorkModal
           selectedWorkIndex={selectedModalIndex}
-          workList={PLAYGROUND_ITEMS}
+          workList={items}
           onClose={() => setSelectedModalIndex(null)}
           onIndexChange={setSelectedModalIndex}
         />

@@ -4,6 +4,7 @@ import { useRef, useSyncExternalStore } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 import { BRAND_IDENTITY } from "@/lib/constants";
+import { navigateTo } from "@/lib/navigation";
 import { CurrentTime } from "./CurrentTime";
 
 const subscribe = () => () => {};
@@ -14,11 +15,17 @@ const getIsTouch = () =>
 
 const getServerIsTouch = () => false;
 
+const HEADLINE_WORDS = [
+  "Building",
+  "reliable",
+  "web",
+  "products",
+];
+
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const isTouch = useSyncExternalStore(subscribe, getIsTouch, getServerIsTouch);
 
-  // Intro reveal + scroll parallax
   useGSAP(
     () => {
       const t = sectionRef.current;
@@ -27,9 +34,10 @@ export function Hero() {
       const navbar = document.querySelector(".navbar");
       const headings = t.querySelectorAll(".hero-heading");
       const labels = t.querySelectorAll(".hero-label");
-      const textSmalls = t.querySelectorAll(".text-small");
+      const textSmalls = t.querySelectorAll(".hero-info-text");
 
-      gsap.set([navbar, headings, labels, textSmalls], { opacity: 0 });
+      gsap.set([navbar, labels, textSmalls], { opacity: 0 });
+      gsap.set(headings, { opacity: 0 });
 
       if (!isTouch) {
         SplitText.create(headings, { type: "words" })
@@ -38,8 +46,8 @@ export function Hero() {
             gsap.set(chars.chars, { yPercent: 100 });
             gsap.to(chars.chars, {
               yPercent: 0,
-              duration: 1,
-              stagger: 0.04,
+              duration: 0.8,
+              stagger: 0.03,
               ease: "power4.out",
             });
           });
@@ -51,11 +59,10 @@ export function Hero() {
         {
           opacity: 1,
           duration: 0.6,
-          delay: 1,
+          delay: 1.2,
           ease: "power2.out",
         }
       );
-
     },
     { scope: sectionRef, dependencies: [isTouch] }
   );
@@ -65,42 +72,30 @@ export function Hero() {
       ref={sectionRef}
       className={`home-hero-section ${isTouch ? "is-touch-device" : "is-mouse-device"}`}
     >
-      <div className="hero-content container">
-        <div className="hero-label-row">
-          <span className="text-small hero-label">(01)</span>
-          <span className="text-small hero-label">
-            [ {BRAND_IDENTITY.role} ]
-          </span>
-        </div>
-
-        <div className="hero-big-heading">
-          <div className="upper-heading-desktop">
-            <h1 className="hero-heading">{BRAND_IDENTITY.headlineDesktop}</h1>
-          </div>
-          <div className="upper-heading-mobile" aria-hidden="true">
-            <span className="hero-heading">
-              {BRAND_IDENTITY.headlineMobileTop}
-            </span>
-            <span className="hero-heading">
-              {BRAND_IDENTITY.headlineMobileBottom}
-            </span>
+      <div className="stage-perspective">
+        <div className="stage">
+          <div className="projects">
+            {HEADLINE_WORDS.map((word, i) => (
+              <div key={i} className="project-container">
+                <h1 className="hero-heading">{word}</h1>
+              </div>
+            ))}
           </div>
 
-          <div className="bottom-row">
-            <div className="left">
-              <span className="text-small">{BRAND_IDENTITY.name}</span>
-              <span className="text-small">
-                Current time: <CurrentTime /> WIB
-              </span>
-            </div>
-            <span className="right hero-heading">
-              {BRAND_IDENTITY.headlineRight}
+          <div className="hero-info">
+            <span className="text-small hero-label">(01)</span>
+            <span className="text-small hero-info-text">{BRAND_IDENTITY.role}</span>
+            <span className="text-small hero-info-text">{BRAND_IDENTITY.name}</span>
+            <span className="text-small hero-info-text">
+              Current time: <CurrentTime /> WIB
             </span>
-          </div>
-
-          <div className="bottom-row-mobile">
-            <span className="text-small">{BRAND_IDENTITY.name}</span>
-            <span className="text-small">{BRAND_IDENTITY.role}</span>
+            <button
+              type="button"
+              className="hero-cta text-small hero-info-text"
+              onClick={() => navigateTo("/work")}
+            >
+              [ View selected work ]
+            </button>
           </div>
         </div>
       </div>

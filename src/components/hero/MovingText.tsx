@@ -32,8 +32,10 @@ export function MovingText() {
 
       mm.add(
         {
-          desktop: "(min-width: 768px)",
-          mobile: "(max-width: 767px)",
+          desktop:
+            "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+          mobile:
+            "(max-width: 767px) and (prefers-reduced-motion: no-preference)",
         },
         (context) => {
           const isMobile = !!context.conditions?.mobile;

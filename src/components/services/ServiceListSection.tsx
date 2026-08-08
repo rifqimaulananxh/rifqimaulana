@@ -49,8 +49,8 @@ export function ServiceListSection() {
         <div className="service-wrapper">
           <div className="section-heading">
             <div className="sub-heading-wrapper">
-              <h1># Services</h1>
-              <span className="text-small-1">What I can help you with?</span>
+              <h1>Capabilities</h1>
+              <span className="text-small-1">How I can help</span>
             </div>
           </div>
 

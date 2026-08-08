@@ -18,9 +18,9 @@ export const SELECTED_WORKS: Project[] = [
     id: "modevelle",
     title: "MODEVELLE",
     description:
-      "A full-fledged e-commerce experience with custom Shopify liquid theming, product storytelling and a buttery smooth shopping journey.",
-    tags: "SHOPIFY CUSTOM, ECOMMERCE",
-    role: "Web Design & Development",
+      "A custom Shopify storefront with Liquid theming, editorial product pages, and a clearer purchase journey.",
+    tags: "SHOPIFY, E-COMMERCE",
+    role: "Web design and development",
     href: "#modevelle",
     image: [
       "/images/portofolio/porto-1.webp",
@@ -34,9 +34,9 @@ export const SELECTED_WORKS: Project[] = [
     id: "mad-world",
     title: "MAD WORLD",
     description:
-      "A creative web app built with Next.js that blends bold motion design with content-first architecture.",
+      "A Next.js web app built around content-first architecture, with motion used to guide discovery.",
     tags: "NEXT.JS, CREATIVE WEB APP",
-    role: "Fullstack Engineering",
+    role: "Full-stack engineering",
     href: "#mad-world",
     image: ["/images/portofolio/porto-3.webp"],
     bgMediaUrl: "/images/portofolio/porto-3.webp",
@@ -47,9 +47,9 @@ export const SELECTED_WORKS: Project[] = [
     id: "aura-os",
     title: "AURA OS",
     description:
-      "A workspace & AI UI concept built with React, exploring ambient interfaces and fluid micro-interactions.",
+      "A React concept for an AI workspace, exploring ambient UI and fluid micro-interactions.",
     tags: "REACT, WORKSPACE & AI UI",
-    role: "Frontend Architecture",
+    role: "Frontend architecture",
     href: "#aura-os",
     image: ["/images/portofolio/porto-4.webp"],
     bgMediaUrl: "/images/portofolio/porto-4.webp",
@@ -60,9 +60,9 @@ export const SELECTED_WORKS: Project[] = [
     id: "pulse-ai",
     title: "PULSE AI",
     description:
-      "A data analytics tooling with an interactive, design-led interface for exploring insights in real time.",
+      "A data analytics tool with an interactive interface for exploring real-time insights.",
     tags: "WEB3, DATA ANALYTICS",
-    role: "UI/UX & Interactive Design",
+    role: "UI/UX and interactive design",
     href: "#pulse-ai",
     image: ["/images/portofolio/porto-5.webp"],
     bgMediaUrl: "/images/portofolio/porto-5.webp",

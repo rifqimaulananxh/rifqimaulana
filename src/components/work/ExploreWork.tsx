@@ -40,7 +40,7 @@ export function ExploreWork() {
         onClick={() => navigateTo("/work")}
         style={{ cursor: "pointer" }}
       >
-        <span className="explore-text">Explore all work</span>
+        <span className="explore-text">View all projects</span>
       </div>
     </section>
   );

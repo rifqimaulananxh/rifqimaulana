@@ -109,7 +109,13 @@ export function WorkListSection() {
 
   return (
     <section ref={sectionRef} className="work-list-section">
-      <h1 className="sr-only">Work</h1>
+      <div className="container work-page-intro">
+        <h1 className="work-page-heading">Selected work</h1>
+        <p className="work-page-description">
+          Web products, interfaces, and interactive experiments built from brief
+          to launch.
+        </p>
+      </div>
       <div className="container">
         <div className="menu-wrapper">
           <div className="work-categories">

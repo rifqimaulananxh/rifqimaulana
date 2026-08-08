@@ -21,21 +21,27 @@ export function WorkModal({
 }: WorkModalProps) {
   const [active, setActive] = useState(false);
   const work = workList[selectedWorkIndex];
-  const [imageIndex, setImageIndex] = useState(0);
-  const [prevWorkIndex, setPrevWorkIndex] = useState(selectedWorkIndex);
-
-  if (prevWorkIndex !== selectedWorkIndex) {
-    setPrevWorkIndex(selectedWorkIndex);
-    setImageIndex(0);
-  }
+  const [imageState, setImageState] = useState({
+    workIndex: selectedWorkIndex,
+    imageIndex: 0,
+  });
+  const imageIndex =
+    imageState.workIndex === selectedWorkIndex ? imageState.imageIndex : 0;
 
   useEffect(() => {
     if (!work || work.image.length <= 1 || work.type === "Playground") return;
     const interval = setInterval(() => {
-      setImageIndex((idx) => (idx + 1) % work.image.length);
+      setImageState((current) => {
+        const currentIndex =
+          current.workIndex === selectedWorkIndex ? current.imageIndex : 0;
+        return {
+          workIndex: selectedWorkIndex,
+          imageIndex: (currentIndex + 1) % work.image.length,
+        };
+      });
     }, 2000);
     return () => clearInterval(interval);
-  }, [work]);
+  }, [selectedWorkIndex, work]);
 
   useEffect(() => {
     const timeout = setTimeout(() => setActive(true), 10);
@@ -51,6 +57,9 @@ export function WorkModal({
 
   if (!work) return null;
 
+  const hasExternalLink = /^https?:\/\//.test(work.href);
+  const projectHref = hasExternalLink ? work.href : "/work";
+
   const close = () => {
     setActive(false);
     setTimeout(onClose, 300);
@@ -62,11 +71,17 @@ export function WorkModal({
   return (
     <div
       className={`work-modal ${active ? "active" : ""}`}
+      aria-hidden={!active}
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}
     >
-      <div className="work-modal-wrapper">
+      <div
+        className="work-modal-wrapper"
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${work.title} project details`}
+      >
         <div className="work-modal-content-left">
           <div className="work-image-wrapper">
             {work.type === "Playground" ? (
@@ -82,7 +97,7 @@ export function WorkModal({
                 <Image
                   key={src}
                   src={src}
-                  alt="project image"
+                  alt={`${work.title} project image`}
                   fill
                   sizes="(max-width: 1024px) 80vw, 50vw"
                   style={{
@@ -99,7 +114,7 @@ export function WorkModal({
               <div className="work-bg-image-wrapper">
                 <Image
                   src={work.bgMediaUrl}
-                  alt="project image"
+                  alt={`${work.title} background image`}
                   fill
                   sizes="(max-width: 1024px) 90vw, 60vw"
                 />
@@ -123,16 +138,20 @@ export function WorkModal({
                 <div className="tech">{work.tags}</div>
               </div>
               <Link
-                href={work.href}
+                href={projectHref}
                 className="project-link"
-                target="_blank"
-                rel="noopener noreferrer"
+                target={hasExternalLink ? "_blank" : undefined}
+                rel={hasExternalLink ? "noopener noreferrer" : undefined}
               >
-                <div className="visit-site">Visit</div>
+                <div className="visit-site">
+                  {hasExternalLink ? "View live site" : "View all projects"}
+                </div>
                 <div className="external-icon">
                   <Image
                     src="/icons/arrow.svg"
-                    alt="external link"
+                    alt={
+                      hasExternalLink ? "external link" : "view all projects"
+                    }
                     fill
                     sizes="20px"
                   />

@@ -68,6 +68,10 @@ export function Services() {
   return (
     <section ref={sectionRef} id="Services" className="services-section">
       <div className="container">
+        <div className="services-header">
+          <span className="text-small-1">Capabilities</span>
+          <span className="text-small">From interface to reliable launch</span>
+        </div>
         <div className="service-list">
           {SERVICES_DATA.map((item, i) => {
             if ("title" in item) {

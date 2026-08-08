@@ -5,6 +5,7 @@ import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { RouteTransition } from "@/components/layout/RouteTransition";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { IntroPreloader } from "@/components/layout/IntroPreloader";
 import { BRAND_IDENTITY, FOOTER_LINKS } from "@/lib/constants";
 import { SITE_URL } from "@/lib/site";
 
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s — Rifqi Maulana",
   },
   description:
-    "Rifqi Maulana is a software engineer delivering high performance web solutions — from Next.js front-ends to scalable Node.js back-ends and GSAP-driven interfaces.",
+    "Rifqi Maulana is a software engineer based in Indonesia, building reliable web products with Next.js, React, Node.js, and thoughtful interaction design.",
   applicationName: "Rifqi Maulana Portfolio",
   keywords: [
     "Rifqi Maulana",
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
     siteName: "Rifqi Maulana",
     title: "Rifqi Maulana — Software Engineer",
     description:
-      "Software engineer crafting robust, high performance web solutions — front-end, back-end and everything in between.",
+      "Software engineer building reliable web products from interface to deployment.",
     images: [
       {
         url: "/og.png",
@@ -67,8 +68,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Rifqi Maulana — Software Engineer",
-    description:
-      "Software engineer crafting robust, high performance web solutions.",
+    description: "Reliable web products from interface to deployment.",
     images: ["/og.png"],
   },
   robots: {
@@ -125,6 +125,7 @@ export default function RootLayout({
             __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
           }}
         />
+        <IntroPreloader />
         <SmoothScroll>
           <RouteTransition />
           <Navbar />
