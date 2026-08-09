@@ -24,6 +24,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Work — Rifqi Maulana",
+    description:
+      "Selected web products, interfaces, and interactive experiments by Rifqi Maulana.",
+    images: ["/og.png"],
+  },
 };
 
 export default function WorkPage() {

@@ -24,6 +24,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "About Me — Rifqi Maulana",
+    description:
+      "The journey, background, and working principles behind Rifqi Maulana.",
+    images: ["/og.png"],
+  },
 };
 
 export default function AboutMePage() {

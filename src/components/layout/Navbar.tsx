@@ -6,20 +6,34 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { BRAND_IDENTITY, FOOTER_LINKS, NAV_LINKS } from "@/lib/constants";
 import { navigateTo } from "@/lib/navigation";
+import { lockScroll } from "@/hooks/useLenis";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const menuItemsRef = useRef<HTMLUListElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const lastFocusedRef = useRef<HTMLElement | null>(null);
   const activeIndex = Math.max(
     0,
-    NAV_LINKS.findIndex((link) => link.href.split("#")[0] === pathname)
+    NAV_LINKS.findIndex((link) => {
+      const path = link.href.split("#")[0];
+      return path === "/"
+        ? pathname === "/"
+        : pathname === path || pathname.startsWith(`${path}/`);
+    })
   );
 
   useGSAP(
     () => {
       const links = menuItemsRef.current?.querySelectorAll("li a");
       if (!links) return;
+      if (prefersReducedMotion()) {
+        gsap.set(links, { y: isOpen ? 0 : "100%" });
+        return;
+      }
       if (isOpen) {
         gsap.to(links, {
           y: 0,
@@ -39,13 +53,56 @@ export function Navbar() {
         });
       }
     },
-    [isOpen]
+    { dependencies: [isOpen], revertOnUpdate: true }
   );
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    if (!isOpen) {
+      (lastFocusedRef.current ?? menuButtonRef.current)?.focus();
+      lastFocusedRef.current = null;
+      return;
+    }
+
+    const unlock = lockScroll();
+    const focusFirstItem = () => {
+      drawerRef.current
+        ?.querySelector<HTMLElement>('a[href], button:not([disabled])')
+        ?.focus();
+    };
+    const frameId = window.requestAnimationFrame(focusFirstItem);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (!drawerRef.current) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsOpen(false);
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        drawerRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = "";
+      window.cancelAnimationFrame(frameId);
+      document.removeEventListener("keydown", handleKeyDown);
+      unlock();
     };
   }, [isOpen]);
 
@@ -54,30 +111,56 @@ export function Navbar() {
     navigateTo(href);
   };
 
+  const toggleMenu = () => {
+    if (!isOpen) {
+      lastFocusedRef.current = document.activeElement as HTMLElement | null;
+    }
+    setIsOpen((open) => !open);
+  };
+
   return (
     <>
       <header className={`navbar ${isOpen ? "open" : ""}`}>
         <div className="left">
-          <span className="logo" onClick={() => handleNavigate("/")}>
+          <button
+            type="button"
+            className="logo"
+            aria-label="Go to home"
+            onClick={() => handleNavigate("/")}
+          >
             {BRAND_IDENTITY.logo}
-          </span>
+          </button>
         </div>
-        <div
+        <button
+          type="button"
           className={`right ${isOpen ? "open" : ""}`}
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Toggle menu"
+          ref={menuButtonRef}
+          onClick={toggleMenu}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          aria-controls="site-menu"
         >
           <div className="menu-horizontal-line" />
           <div className="menu-horizontal-line" />
-        </div>
+        </button>
       </header>
 
-      <div
+      <button
+        type="button"
         className={`drawer-overlay ${isOpen ? "open" : ""}`}
         onClick={() => setIsOpen(false)}
+        aria-label="Close menu"
+        aria-hidden={!isOpen}
+        tabIndex={isOpen ? 0 : -1}
       />
 
-      <div className={`drawer ${isOpen ? "open" : ""}`}>
+      <div
+        ref={drawerRef}
+        id="site-menu"
+        className={`drawer ${isOpen ? "open" : ""}`}
+        aria-hidden={!isOpen}
+        inert={!isOpen}
+      >
         <div className="drawer-content">
           <div className="drawer-top">
             <span className="text-small">{BRAND_IDENTITY.label}</span>
@@ -93,6 +176,15 @@ export function Navbar() {
                     activeIndex === index ? "active" : ""
                   }`}
                   onClick={(e) => {
+                    if (
+                      e.button !== 0 ||
+                      e.metaKey ||
+                      e.ctrlKey ||
+                      e.shiftKey ||
+                      e.altKey
+                    ) {
+                      return;
+                    }
                     e.preventDefault();
                     handleNavigate(item.href);
                   }}

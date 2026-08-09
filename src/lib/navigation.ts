@@ -29,6 +29,7 @@ export function navigateTo(href: string) {
   if (normalizedPath === window.location.pathname) {
     if (hash) {
       pendingHash = hash;
+      window.history.pushState(null, "", `${normalizedPath}#${hash}`);
       window.dispatchEvent(new CustomEvent("route:scroll"));
     } else {
       const lenis = getLenis();

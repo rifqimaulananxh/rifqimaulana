@@ -10,6 +10,7 @@ import { PLAYGROUND_ITEMS } from "@/lib/playground";
 import { WorkCard } from "./WorkCard";
 import { WorkModal } from "./WorkModal";
 import type { Project } from "@/lib/projects";
+import { prefersReducedMotion } from "@/lib/motion";
 
 const ALL_WORKS: Project[] = [...SELECTED_WORKS, ...PLAYGROUND_ITEMS];
 
@@ -18,9 +19,16 @@ export function WorkListSection() {
   const [selectedModalIndex, setSelectedModalIndex] = useState<number | null>(
     null
   );
+  const [scrollProgress, setScrollProgress] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  const thumbRef = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLButtonElement>(null);
+  const dragRef = useRef<{
+    startX: number;
+    startScrollLeft: number;
+    maxThumbTravel: number;
+    maxScroll: number;
+  } | null>(null);
 
   const matchesCategory = (work: Project) => {
     if (activeCategory === "all") return true;
@@ -43,6 +51,9 @@ export function WorkListSection() {
         : (list.scrollLeft / scrollable) * (100 - width);
     thumb.style.width = `${width}%`;
     thumb.style.left = `${left}%`;
+    setScrollProgress(
+      scrollable <= 0 ? 0 : Math.round((list.scrollLeft / scrollable) * 100)
+    );
   }, []);
 
   useEffect(() => {
@@ -56,19 +67,70 @@ export function WorkListSection() {
     if (!list) return;
     const card = list.querySelector<HTMLElement>(".work-card-item");
     const step = card ? card.offsetWidth + 20 : 700;
-    list.scrollBy({ left: dir * step, behavior: "smooth" });
+    list.scrollBy({
+      left: dir * step,
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+    });
   };
 
   const selectCategory = (key: string) => {
     setActiveCategory(key);
     const list = listRef.current;
     if (list) list.scrollTo({ left: 0 });
+    window.requestAnimationFrame(updateThumb);
+  };
+
+  const handleThumbPointerDown = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const list = listRef.current;
+    const thumb = thumbRef.current;
+    const wrapper = thumb?.parentElement;
+    if (!list || !thumb || !wrapper) return;
+
+    const maxThumbTravel = wrapper.clientWidth - thumb.offsetWidth;
+    const maxScroll = list.scrollWidth - list.clientWidth;
+    if (maxThumbTravel <= 0 || maxScroll <= 0) return;
+
+    dragRef.current = {
+      startX: event.clientX,
+      startScrollLeft: list.scrollLeft,
+      maxThumbTravel,
+      maxScroll,
+    };
+    thumb.setPointerCapture(event.pointerId);
+  };
+
+  const handleThumbPointerMove = (event: React.PointerEvent<HTMLButtonElement>) => {
+    const list = listRef.current;
+    const drag = dragRef.current;
+    if (!list || !drag) return;
+
+    const delta = event.clientX - drag.startX;
+    list.scrollLeft = Math.max(
+      0,
+      Math.min(
+        drag.maxScroll,
+        drag.startScrollLeft + (delta / drag.maxThumbTravel) * drag.maxScroll
+      )
+    );
+  };
+
+  const stopThumbDrag = () => {
+    dragRef.current = null;
+  };
+
+  const handleThumbKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+    event.preventDefault();
+    listRef.current?.scrollBy({
+      left: event.key === "ArrowRight" ? 240 : -240,
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+    });
   };
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || prefersReducedMotion()) return;
 
       gsap.fromTo(
         section.querySelectorAll(".work-category-item"),
@@ -89,7 +151,7 @@ export function WorkListSection() {
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || prefersReducedMotion()) return;
 
       gsap.fromTo(
         section.querySelectorAll(".work-card-item"),
@@ -104,7 +166,11 @@ export function WorkListSection() {
         }
       );
     },
-    { scope: sectionRef, dependencies: [activeCategory] }
+    {
+      scope: sectionRef,
+      dependencies: [activeCategory],
+      revertOnUpdate: true,
+    }
   );
 
   return (
@@ -120,55 +186,90 @@ export function WorkListSection() {
         <div className="menu-wrapper">
           <div className="work-categories">
             {WORK_CATEGORIES.map((cat) => (
-              <span
+              <button
                 key={cat.key}
+                type="button"
                 className={`work-category-item ${
                   activeCategory === cat.key ? "active" : ""
                 }`}
+                aria-pressed={activeCategory === cat.key}
                 onClick={() => selectCategory(cat.key)}
               >
                 {cat.label}
-              </span>
+              </button>
             ))}
           </div>
           <div className="move-work-item-wrapper">
-            <div className="left" onClick={() => scrollByCard(-1)}>
+            <button
+              type="button"
+              className="left"
+              aria-label="Previous project"
+              onClick={() => scrollByCard(-1)}
+            >
               <Image
-                alt="left"
+                alt=""
                 src="/icons/arrow.svg"
                 fill
                 sizes="42px"
               />
-            </div>
-            <div className="right" onClick={() => scrollByCard(1)}>
+            </button>
+            <button
+              type="button"
+              className="right"
+              aria-label="Next project"
+              onClick={() => scrollByCard(1)}
+            >
               <Image
-                alt="right"
+                alt=""
                 src="/icons/arrow.svg"
                 fill
                 sizes="42px"
               />
-            </div>
+            </button>
           </div>
         </div>
       </div>
 
       <div
         ref={listRef}
+        id="work-project-list"
         className="work-list-wrapper"
         onScroll={updateThumb}
       >
-        {filteredWorks.map((work, i) => (
-          <WorkCard
-            key={work.id}
-            item={work}
-            onClick={() => setSelectedModalIndex(i)}
-          />
-        ))}
+        {filteredWorks.length > 0 ? (
+          filteredWorks.map((work, i) => (
+            <WorkCard
+              key={work.id}
+              item={work}
+              onClick={() => setSelectedModalIndex(i)}
+            />
+          ))
+        ) : (
+          <p className="work-empty-state">
+            No projects in this category yet. Check back soon.
+          </p>
+        )}
       </div>
 
       <div className="container">
         <div className="scroll-wrapper">
-          <div ref={thumbRef} className="scroll-thumb" />
+          <button
+            ref={thumbRef}
+            type="button"
+            className="scroll-thumb"
+            aria-label="Drag to browse projects"
+            role="scrollbar"
+            aria-orientation="horizontal"
+            aria-controls="work-project-list"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={scrollProgress}
+            onPointerDown={handleThumbPointerDown}
+            onPointerMove={handleThumbPointerMove}
+            onPointerUp={stopThumbDrag}
+            onPointerCancel={stopThumbDrag}
+            onKeyDown={handleThumbKeyDown}
+          />
         </div>
       </div>
 

@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import type { Project } from "@/lib/projects";
 
 interface WorkCardProps {
@@ -13,33 +14,56 @@ export const WorkCard = memo(function WorkCard({
   item,
   onClick,
 }: WorkCardProps) {
+  const caseStudyHref = item.href.startsWith("/work/") ? item.href : null;
+  const image = (
+    <Image
+      src={item.image[0]}
+      alt={`${item.title} project preview`}
+      fill
+      sizes="(max-width: 1024px) 80vw, 780px"
+      className={item.type === "Playground" ? "thumbnail" : "work-image"}
+      style={{ objectFit: "cover" }}
+    />
+  );
+
   return (
     <div className="work-card-item" style={{ flexShrink: 0 }}>
       <div className="work-card">
-        <div
-          className="work-card-image-wrapper"
-          onClick={onClick}
-          style={{ cursor: "pointer" }}
-        >
-          <Image
-            src={item.image[0]}
-            alt="work image"
-            fill
-            sizes="(max-width: 1024px) 80vw, 780px"
-            className={item.type === "Playground" ? "thumbnail" : "work-image"}
-            style={{ objectFit: "cover" }}
-          />
-        </div>
+        {caseStudyHref ? (
+          <Link
+            href={caseStudyHref}
+            className="work-card-image-wrapper"
+            aria-label={`Open ${item.title} case study`}
+          >
+            {image}
+          </Link>
+        ) : (
+          <button
+            type="button"
+            className="work-card-image-wrapper"
+            aria-label={`Open ${item.title} details`}
+            onClick={onClick}
+          >
+            {image}
+          </button>
+        )}
 
         <div className="work-card-content">
-          <div
-            className="work-card-title"
-            onClick={onClick}
-            style={{ cursor: "pointer" }}
-          >
-            <span className="title">{item.title}</span>
-            <span className="bracket-button">[Open]</span>
-          </div>
+          {caseStudyHref ? (
+            <Link href={caseStudyHref} className="work-card-title">
+              <span className="title">{item.title}</span>
+              <span className="bracket-button">[Open]</span>
+            </Link>
+          ) : (
+            <button
+              type="button"
+              className="work-card-title"
+              onClick={onClick}
+            >
+              <span className="title">{item.title}</span>
+              <span className="bracket-button">[Open]</span>
+            </button>
+          )}
           <div className="work-card-details">
             {item.type === "Playground" ? (
               <>

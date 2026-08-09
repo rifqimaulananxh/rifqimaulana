@@ -24,8 +24,18 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact — Rifqi Maulana",
+    description: "Tell me what you are building and what you need next.",
+    images: ["/og.png"],
+  },
 };
 
 export default function Contact() {
-  return <ContactPage />;
+  return (
+    <main>
+      <ContactPage />
+    </main>
+  );
 }

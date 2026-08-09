@@ -1,101 +1,105 @@
 "use client";
 
-import { useRef, useSyncExternalStore } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap, SplitText } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { BRAND_IDENTITY } from "@/lib/constants";
-import { navigateTo } from "@/lib/navigation";
-import { CurrentTime } from "./CurrentTime";
+import { prefersReducedMotion } from "@/lib/motion";
 
-const subscribe = () => () => {};
-
-const getIsTouch = () =>
-  typeof window !== "undefined" &&
-  ("ontouchstart" in window || navigator.maxTouchPoints > 0);
-
-const getServerIsTouch = () => false;
-
-const HEADLINE_WORDS = [
-  "Building",
-  "reliable",
-  "web",
-  "products",
-];
+const HEADLINE_WORDS = ["Building", "reliable", "web", "products"];
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isTouch = useSyncExternalStore(subscribe, getIsTouch, getServerIsTouch);
 
   useGSAP(
     () => {
-      const t = sectionRef.current;
-      if (!t) return;
+      const section = sectionRef.current;
+      if (!section) return;
 
       const navbar = document.querySelector(".navbar");
-      const headings = t.querySelectorAll(".hero-heading");
-      const labels = t.querySelectorAll(".hero-label");
-      const textSmalls = t.querySelectorAll(".hero-info-text");
+      const titleLines = section.querySelectorAll(".hero-title-line");
+      const content = section.querySelectorAll("[data-hero-content]");
+      const image = section.querySelector(".hero-visual-image");
+      const revealTargets = [
+        ...Array.from(content),
+        ...(navbar ? [navbar] : []),
+      ];
 
-      gsap.set([navbar, labels, textSmalls], { opacity: 0 });
-      gsap.set(headings, { opacity: 0 });
-
-      if (!isTouch) {
-        SplitText.create(headings, { type: "words" })
-          .words.forEach((word) => {
-            const chars = SplitText.create(word, { type: "chars" });
-            gsap.set(chars.chars, { yPercent: 100 });
-            gsap.to(chars.chars, {
-              yPercent: 0,
-              duration: 0.8,
-              stagger: 0.03,
-              ease: "power4.out",
-            });
-          });
+      if (prefersReducedMotion()) {
+        return;
       }
 
-      gsap.set(headings, { opacity: 1 });
-      gsap.to(
-        [navbar, labels, textSmalls],
+      gsap.fromTo(
+        titleLines,
+        { yPercent: 110 },
         {
-          opacity: 1,
-          duration: 0.6,
-          delay: 1.2,
-          ease: "power2.out",
+          yPercent: 0,
+          duration: 1.35,
+          stagger: 0.1,
+          ease: "power4.out",
         }
       );
+      gsap.fromTo(
+        revealTargets,
+        { y: 24, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.1,
+          ease: "power3.out",
+        }
+      );
+      if (image) {
+        gsap.fromTo(
+          image,
+          { height: "0%" },
+          {
+            height: "100%",
+            duration: 0.7,
+            ease: "power1.out",
+          }
+        );
+      }
     },
-    { scope: sectionRef, dependencies: [isTouch] }
+    { scope: sectionRef }
   );
 
   return (
-    <section
-      ref={sectionRef}
-      className={`home-hero-section ${isTouch ? "is-touch-device" : "is-mouse-device"}`}
-    >
-      <div className="stage-perspective">
-        <div className="stage">
-          <div className="projects">
-            {HEADLINE_WORDS.map((word, i) => (
-              <div key={i} className="project-container">
-                <h1 className="hero-heading">{word}</h1>
-              </div>
-            ))}
+    <section ref={sectionRef} className="home-hero-redesign">
+      <div className="container hero-redesign-grid">
+        <div className="hero-redesign-copy">
+          <div className="hero-kicker text-small" data-hero-content>
+            <span>{BRAND_IDENTITY.name}</span>
+            <span>{BRAND_IDENTITY.label}</span>
           </div>
+          <h1 className="hero-title" aria-label="Building reliable web products">
+            {HEADLINE_WORDS.map((word) => (
+              <span key={word} className="hero-title-mask">
+                <span className="hero-title-line">{word}</span>
+              </span>
+            ))}
+          </h1>
+          <div className="hero-redesign-footer text-small" data-hero-content>
+            <span>From interface to deployment</span>
+            <Link href="/work">[ View selected work ]</Link>
+          </div>
+        </div>
 
-          <div className="hero-info">
-            <span className="text-small hero-label">(01)</span>
-            <span className="text-small hero-info-text">{BRAND_IDENTITY.role}</span>
-            <span className="text-small hero-info-text">{BRAND_IDENTITY.name}</span>
-            <span className="text-small hero-info-text">
-              Current time: <CurrentTime /> WIB
-            </span>
-            <button
-              type="button"
-              className="hero-cta text-small hero-info-text"
-              onClick={() => navigateTo("/work")}
-            >
-              [ View selected work ]
-            </button>
+        <div className="hero-visual">
+          <Image
+            src="/images/portofolio/rifqi.webp"
+            alt={`Portrait of ${BRAND_IDENTITY.name}`}
+            fill
+            priority
+            sizes="(max-width: 900px) 100vw, 46vw"
+            className="hero-visual-image image-reveal"
+          />
+          <div className="hero-visual-caption text-small" aria-hidden="true">
+            <span>Software engineer / Indonesia</span>
+            <span>01</span>
           </div>
         </div>
       </div>

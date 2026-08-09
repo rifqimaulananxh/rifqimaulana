@@ -1,12 +1,14 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 import { FOOTER_LINKS } from "@/lib/constants";
 import { CONTACT_BUDGETS } from "@/lib/pages";
+import { prefersReducedMotion } from "@/lib/motion";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+type ErrorField = "name" | "email" | "message" | null;
 
 export function ContactPage() {
   const [page, setPage] = useState<1 | 2 | 3>(1);
@@ -16,12 +18,16 @@ export function ContactPage() {
   const [message, setMessage] = useState("");
   const [budgets, setBudgets] = useState<string[]>([]);
   const [error, setError] = useState("");
+  const [errorField, setErrorField] = useState<ErrorField>(null);
+  const [mailtoHref, setMailtoHref] = useState("");
   const sectionRef = useRef<HTMLElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || prefersReducedMotion()) return;
 
       const title = section.querySelector(".title h1");
       if (title) {
@@ -50,16 +56,39 @@ export function ContactPage() {
     { scope: sectionRef }
   );
 
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => {
+      if (page === 1) nameRef.current?.focus();
+      if (page === 2) messageRef.current?.focus();
+    });
+    return () => window.cancelAnimationFrame(frameId);
+  }, [page]);
+
+  const setValidationError = (
+    field: ErrorField,
+    messageText: string
+  ) => {
+    setErrorField(field);
+    setError(messageText);
+  };
+
+  const clearFieldError = (field: ErrorField) => {
+    if (errorField !== field) return;
+    setErrorField(null);
+    setError("");
+  };
+
   const goToNext = () => {
     if (!name.trim()) {
-      setError("Please enter your name");
+      setValidationError("name", "Please enter your name");
       return;
     }
     if (!EMAIL_REGEX.test(email.trim())) {
-      setError("Please enter a valid email address");
+      setValidationError("email", "Please enter a valid email address");
       return;
     }
     setError("");
+    setErrorField(null);
     setPage(2);
   };
 
@@ -72,12 +101,27 @@ export function ContactPage() {
   };
 
   const sendRequest = () => {
-    const subject = encodeURIComponent(`Project inquiry from ${name}`);
+    if (!message.trim()) {
+      setValidationError("message", "Please tell me a little about the project");
+      return;
+    }
+
+    const subject = encodeURIComponent(`Project inquiry from ${name.trim()}`);
     const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nCompany: ${company || "Not specified"}\n\n${message}\n\nBudget: ${budgets.join(", ") || "Not specified"}`
+      `Name: ${name.trim()}\nEmail: ${email.trim()}\nCompany: ${company.trim() || "Not specified"}\n\n${message.trim()}\n\nBudget: ${budgets.join(", ") || "Not specified"}`
     );
-    window.location.href = `mailto:${FOOTER_LINKS.email}?subject=${subject}&body=${body}`;
+    const href = `mailto:${FOOTER_LINKS.email}?subject=${subject}&body=${body}`;
+    setMailtoHref(href);
+    setError("");
+    setErrorField(null);
     setPage(3);
+    window.location.assign(href);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (page === 1) goToNext();
+    if (page === 2) sendRequest();
   };
 
   return (
@@ -113,43 +157,88 @@ export function ContactPage() {
         <div className="contact-form-wrapper">
           <form
             className="contact-form"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleSubmit}
+            aria-labelledby="contact-form-title"
           >
+            <h2 id="contact-form-title" className="sr-only">
+              Project inquiry
+            </h2>
             {page === 1 ? (
               <div className="page-1-wrapper">
-                <label className="text-medium">
+                <p className="text-medium">
                   Let&apos;s start a conversation
-                </label>
+                </p>
                 <div className="input-wrapper">
+                  <label className="sr-only" htmlFor="contact-name">
+                    Your name
+                  </label>
                   <input
+                    ref={nameRef}
+                    id="contact-name"
+                    name="name"
                     type="text"
                     placeholder="Your name"
+                    autoComplete="name"
+                    required
+                    aria-invalid={errorField === "name"}
+                    aria-describedby={
+                      error && errorField === "name"
+                        ? "contact-error"
+                        : undefined
+                    }
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      clearFieldError("name");
+                    }}
                   />
                 </div>
                 <div className="input-wrapper">
+                  <label className="sr-only" htmlFor="contact-email">
+                    Email address
+                  </label>
                   <input
+                    id="contact-email"
+                    name="email"
                     type="email"
                     placeholder="Email"
+                    autoComplete="email"
+                    required
+                    aria-invalid={errorField === "email"}
+                    aria-describedby={
+                      error && errorField === "email"
+                        ? "contact-error"
+                        : undefined
+                    }
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      clearFieldError("email");
+                    }}
                   />
                 </div>
                 <div className="input-wrapper">
+                  <label className="sr-only" htmlFor="contact-company">
+                    Company or project name
+                  </label>
                   <input
+                    id="contact-company"
+                    name="company"
                     type="text"
                     placeholder="Company or project name (optional)"
+                    autoComplete="organization"
                     value={company}
                     onChange={(e) => setCompany(e.target.value)}
                   />
                 </div>
                 <div className="button-wrapper">
-                  <button type="button" className="next-step" onClick={goToNext}>
+                  <button type="submit" className="next-step">
                     Next step
                   </button>
                   {error && (
-                    <span className="error-message text-small">{error}</span>
+                    <p id="contact-error" className="error-message text-small" role="alert">
+                      {error}
+                    </p>
                   )}
                 </div>
               </div>
@@ -163,18 +252,37 @@ export function ContactPage() {
                   Back
                 </button>
                 <div className="input-wrapper">
+                  <label className="sr-only" htmlFor="contact-message">
+                    Project details
+                  </label>
                   <textarea
+                    ref={messageRef}
+                    id="contact-message"
+                    name="message"
                     placeholder="Tell me about your project"
                     rows={4}
+                    required
+                    aria-invalid={errorField === "message"}
+                    aria-describedby={
+                      error && errorField === "message"
+                        ? "contact-error"
+                        : undefined
+                    }
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                      clearFieldError("message");
+                    }}
                   />
-                  <div className="budgets">
-                    <div className="budget-title">Approximate budget (USD)</div>
+                  <fieldset className="budgets">
+                    <legend className="budget-title">Approximate budget (USD)</legend>
                     <div className="check-container">
-                      {CONTACT_BUDGETS.map((budget) => (
-                        <label key={budget} className="checkbox-label">
+                      {CONTACT_BUDGETS.map((budget, index) => (
+                        <label key={budget} className="checkbox-label" htmlFor={`budget-${index}`}>
                           <input
+                            id={`budget-${index}`}
+                            name="budget"
+                            value={budget}
                             type="checkbox"
                             checked={budgets.includes(budget)}
                             onChange={() => toggleBudget(budget)}
@@ -183,17 +291,27 @@ export function ContactPage() {
                         </label>
                       ))}
                     </div>
-                  </div>
+                  </fieldset>
+                  {error && (
+                    <p id="contact-error" className="error-message text-small" role="alert">
+                      {error}
+                    </p>
+                  )}
                 </div>
-                <button type="button" className="send-request" onClick={sendRequest}>
+                <button type="submit" className="send-request">
                   Open email draft
                 </button>
               </div>
             ) : (
               <div className="page-3-wrapper">
-                <span className="success-message">
+                <p className="success-message" role="status" aria-live="polite">
                   Your email draft is ready. Send it to complete your inquiry.
-                </span>
+                </p>
+                {mailtoHref && (
+                  <a className="success-link text-small" href={mailtoHref}>
+                    Open email draft again
+                  </a>
+                )}
               </div>
             )}
           </form>

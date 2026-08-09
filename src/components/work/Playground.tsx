@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { PLAYGROUND_ITEMS } from "@/lib/playground";
 import { WorkModal } from "./WorkModal";
 import type { Project } from "@/lib/projects";
+import { prefersReducedMotion } from "@/lib/motion";
 
 interface PlaygroundItemProps {
   item: Project;
@@ -19,117 +20,35 @@ function PlaygroundItem({
   index,
   setSelectedModalIndex,
 }: PlaygroundItemProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [videoFailed, setVideoFailed] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
-  const itemRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const hasVideo = /\.(mp4|webm|ogg)$/i.test(item.bgMediaUrl);
-
-  useEffect(() => {
-    const check = () => {
-      setIsTouch(
-        window.matchMedia("(max-width: 1024px)").matches ||
-          "ontouchstart" in window ||
-          window.matchMedia("(hover: none)").matches
-      );
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  useEffect(() => {
-    if (!hasVideo || !isTouch || !itemRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { rootMargin: "0px", threshold: 0.15 }
-    );
-    observer.observe(itemRef.current);
-    return () => observer.disconnect();
-  }, [hasVideo, isTouch]);
-
-  const showVideo = hasVideo && (isTouch ? isVisible : isHovered);
-
   return (
-    <div ref={itemRef} className="playground-grid-item">
+    <div className="playground-grid-item">
       <div className="playground-content">
-        <div
+        <button
+          type="button"
           onClick={() => setSelectedModalIndex(index)}
           className="video-wrapper"
-          style={{ cursor: "pointer" }}
-          onMouseEnter={() => !isTouch && setIsHovered(true)}
-          onMouseLeave={() => !isTouch && setIsHovered(false)}
+          aria-label={`Open ${item.title} experiment details`}
         >
           {item.image[0] && (
             <Image
               src={item.image[0]}
-              alt={item.title}
+              alt=""
               fill
               sizes="(max-width: 1024px) 50vw, 30vw"
               className="thumbnail"
-              style={{
-                objectFit: "cover",
-                opacity: showVideo && isPlaying ? 0 : 1,
-                transition: "opacity 0.3s ease",
-              }}
             />
           )}
-          {showVideo && !isPlaying && !videoFailed && (
-            <div
-              className="video-loading-overlay"
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0, 0, 0, 0.2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 3,
-                pointerEvents: "none",
-              }}
-            >
-              <span
-                className="text-x-small"
-                style={{ color: "var(--primary)" }}
-              >
-                Loading...
-              </span>
-            </div>
-          )}
-          {showVideo && !videoFailed && (
-            <video
-              ref={videoRef}
-              className="video"
-              src={item.bgMediaUrl}
-              loop
-              muted
-              playsInline
-              autoPlay
-              onPlaying={() => setIsPlaying(true)}
-              onError={() => setVideoFailed(true)}
-              style={{
-                opacity: isPlaying ? 1 : 0,
-                transition: "opacity 0.3s ease",
-              }}
-            />
-          )}
-        </div>
+        </button>
 
         <div className="info-wrapper">
           <div className="title-wrapper">
-            <div
+            <button
+              type="button"
               onClick={() => setSelectedModalIndex(index)}
               className="title"
-              style={{ cursor: "pointer" }}
             >
               {item.title}
-            </div>
+            </button>
           </div>
           <div className="info">
             <div className="type-wrapper">
@@ -154,35 +73,44 @@ export function Playground({ limit }: { limit?: number }) {
 
   useGSAP(
     () => {
-      gsap.utils.toArray<HTMLElement>(".playground-grid-item").forEach((el, i) => {
-        const targets = el.querySelectorAll(".video, .thumbnail");
-        if (targets.length > 0) {
-          gsap.fromTo(
-            targets,
-            { height: "0%" },
-            {
-              height: "100%",
-              duration: 0.7,
-              delay: 0.15 * i,
-              ease: "power1.out",
-              scrollTrigger: {
-                trigger: el,
-                start: "top bottom",
-              },
-            }
-          );
-        }
-      });
+      if (prefersReducedMotion()) return;
+      gsap
+        .utils.toArray<HTMLElement>(".playground-grid-item")
+        .forEach((el, i) => {
+          const targets = el.querySelectorAll(".thumbnail");
+          if (targets.length > 0) {
+            gsap.fromTo(
+              targets,
+              { height: "0%" },
+              {
+                height: "100%",
+                duration: 0.7,
+                delay: 0.15 * i,
+                ease: "power1.out",
+                scrollTrigger: {
+                  trigger: el,
+                  start: "top bottom",
+                },
+              }
+            );
+          }
+        });
     },
     { scope: sectionRef }
   );
 
   return (
-    <section ref={sectionRef} className="playground-section">
+    <section
+      ref={sectionRef}
+      className="playground-section"
+      aria-labelledby="playground-heading"
+    >
       <div className="container">
         <div className="section-header">
-          <span className="text-small-1">Playground</span>
-          <span className="text-small-1">Experiments / Animations / 3D</span>
+          <h2 id="playground-heading" className="text-small-1">
+            Playground
+          </h2>
+          <span className="text-small-1">Experiments / Motion / 3D</span>
         </div>
         <div className="playground-content-grid">
           {items.map((item, i) => (

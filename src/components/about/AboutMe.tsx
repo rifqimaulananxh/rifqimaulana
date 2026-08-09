@@ -2,52 +2,49 @@
 
 import { useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
-import { useHomeContext } from "@/context/HomeContext";
 import { HOME_DESCRIPTION } from "@/lib/site";
 import { BRAND_IDENTITY } from "@/lib/constants";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function AboutMe() {
   const sectionRef = useRef<HTMLElement>(null);
-  const { isHomePageLoading } = useHomeContext();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || isHomePageLoading) return;
+      if (!section || prefersReducedMotion()) return;
 
       const wrapper = section.querySelector(".about-me-wrapper");
-      const lines = section.querySelectorAll(".about-me-description .line");
+      const description = section.querySelector(".about-me-description");
       const pic = section.querySelector(".display-pic");
 
-      if (pic && lines) {
-        lines.forEach((line) => {
-          const split = SplitText.create(line, { type: "words" });
-          gsap.set(split.words, { y: "100%" });
-          gsap.to(split.words, {
-            y: "0%",
-            duration: 1.7,
-            ease: "power4.out",
-            stagger: 0.06,
-            scrollTrigger: {
-              trigger: line.parentElement,
-              start: "top 90%",
-            },
-          });
+      if (pic && description) {
+        const words = SplitText.create(description, { type: "words" }).words;
+        gsap.set(words, { y: "100%" });
+        gsap.to(words, {
+          y: "0%",
+          duration: 1.2,
+          ease: "power4.out",
+          stagger: 0.03,
+          scrollTrigger: {
+            trigger: description,
+            start: "top 90%",
+          },
         });
 
         gsap.fromTo(
           pic,
-          { yPercent: -10 },
+          { height: "0%" },
           {
-            yPercent: 0,
-            ease: "none",
+            height: "100%",
+            duration: 0.7,
+            ease: "power1.out",
             scrollTrigger: {
               trigger: section,
               start: "top bottom",
-              end: "top top",
-              scrub: true,
             },
           }
         );
@@ -66,17 +63,20 @@ export function AboutMe() {
         });
       }
     },
-    { scope: sectionRef, dependencies: [isHomePageLoading] }
+    { scope: sectionRef }
   );
 
   return (
-    <section ref={sectionRef} className="about-me-section">
-      <div className="about-me-label-row">
-        <span className="text-small hero-label">(02)</span>
-        <span className="text-small hero-label">[ ABOUT ]</span>
-      </div>
+    <section
+      ref={sectionRef}
+      className="about-me-section"
+      aria-labelledby="home-about-heading"
+    >
       <div className="about-me-wrapper">
         <div className="about-me-info">
+          <h2 id="home-about-heading" className="sr-only">
+            About me
+          </h2>
           <p className="about-me-description text-medium split-n-wrap">
             {HOME_DESCRIPTION}
           </p>
@@ -85,13 +85,12 @@ export function AboutMe() {
           </Link>
         </div>
         <div className="about-me-pic">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/images/portofolio/rifqi.webp"
-            className="display-pic"
+            className="display-pic image-reveal"
             alt={`Image of ${BRAND_IDENTITY.name}, a software engineer specialised in web development`}
-            width="100%"
-            height="100%"
+            fill
+            sizes="(max-width: 1024px) 100vw, 45vw"
           />
         </div>
       </div>

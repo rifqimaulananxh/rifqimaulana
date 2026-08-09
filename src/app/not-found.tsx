@@ -9,39 +9,41 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <section
-      className="container"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-        gap: 24,
-        minHeight: "70vh",
-        justifyContent: "center",
-        paddingTop: 80,
-        paddingBottom: 80,
-      }}
-    >
-      <span className="text-x-small" style={{ letterSpacing: "0.3em" }}>
-        [ ERROR · 404 ]
-      </span>
-      <h1 style={{ fontSize: "clamp(80px, 14vw, 200px)", fontWeight: 700, lineHeight: 0.95, letterSpacing: "-0.02em" }}>
-        404
-      </h1>
-      <p className="text-small" style={{ maxWidth: 420, lineHeight: 1.6 }}>
-        Page not found — the page you&apos;re looking for doesn&apos;t exist or
-        has moved. Let&apos;s get you back to something useful.
-      </p>
-      <Link
-        href="/"
-        className="text-small"
+    <main>
+      <section
+        className="container"
         style={{
-          textDecoration: "underline",
-          textUnderlineOffset: 4,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          gap: 24,
+          minHeight: "70vh",
+          justifyContent: "center",
+          paddingTop: 80,
+          paddingBottom: 80,
         }}
       >
-        ← Back to home ({BRAND_IDENTITY.logo})
-      </Link>
-    </section>
+        <span className="text-x-small" style={{ letterSpacing: "0.3em" }}>
+          [ ERROR · 404 ]
+        </span>
+        <h1 style={{ fontSize: "clamp(80px, 14vw, 200px)", fontWeight: 700, lineHeight: 0.95, letterSpacing: "-0.02em" }}>
+          404
+        </h1>
+        <p className="text-small" style={{ maxWidth: 420, lineHeight: 1.6 }}>
+          Page not found — the page you&apos;re looking for doesn&apos;t exist or
+          has moved. Let&apos;s get you back to something useful.
+        </p>
+        <Link
+          href="/"
+          className="text-small"
+          style={{
+            textDecoration: "underline",
+            textUnderlineOffset: 4,
+          }}
+        >
+          Back to home ({BRAND_IDENTITY.logo})
+        </Link>
+      </section>
+    </main>
   );
 }

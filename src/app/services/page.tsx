@@ -26,6 +26,13 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Services — Rifqi Maulana",
+    description:
+      "Product interfaces, web applications, backend APIs, and thoughtful interaction design.",
+    images: ["/og.png"],
+  },
 };
 
 export default function ServicesPage() {

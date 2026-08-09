@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getLenis, whenLenisReady } from "@/hooks/useLenis";
+import { lockScroll } from "@/hooks/useLenis";
 import type { Project } from "@/lib/projects";
+import { prefersReducedMotion } from "@/lib/motion";
 
 interface WorkModalProps {
   selectedWorkIndex: number;
@@ -21,6 +22,10 @@ export function WorkModal({
 }: WorkModalProps) {
   const [active, setActive] = useState(false);
   const work = workList[selectedWorkIndex];
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
+  const closingRef = useRef(false);
+  const onCloseRef = useRef(onClose);
   const [imageState, setImageState] = useState({
     workIndex: selectedWorkIndex,
     imageIndex: 0,
@@ -29,7 +34,18 @@ export function WorkModal({
     imageState.workIndex === selectedWorkIndex ? imageState.imageIndex : 0;
 
   useEffect(() => {
-    if (!work || work.image.length <= 1 || work.type === "Playground") return;
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
+    if (
+      !work ||
+      work.image.length <= 1 ||
+      work.type === "Playground" ||
+      prefersReducedMotion()
+    ) {
+      return;
+    }
     const interval = setInterval(() => {
       setImageState((current) => {
         const currentIndex =
@@ -43,27 +59,64 @@ export function WorkModal({
     return () => clearInterval(interval);
   }, [selectedWorkIndex, work]);
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setActive(true), 10);
-    document.body.style.overflow = "hidden";
-    const unsub = whenLenisReady((lenis) => lenis.stop());
-    return () => {
-      clearTimeout(timeout);
-      document.body.style.overflow = "";
-      unsub();
-      getLenis()?.start();
-    };
+  const close = useCallback(() => {
+    if (closingRef.current) return;
+    closingRef.current = true;
+    setActive(false);
+    window.setTimeout(() => onCloseRef.current(), 300);
   }, []);
+
+  useEffect(() => {
+    previousActiveElementRef.current = document.activeElement as HTMLElement | null;
+    const unlock = lockScroll();
+    const frameId = window.requestAnimationFrame(() => {
+      setActive(true);
+      dialogRef.current?.focus();
+    });
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const dialog = dialogRef.current;
+      if (!dialog) return;
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+        return;
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      );
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      document.removeEventListener("keydown", handleKeyDown);
+      unlock();
+      previousActiveElementRef.current?.focus();
+    };
+  }, [close]);
 
   if (!work) return null;
 
   const hasExternalLink = /^https?:\/\//.test(work.href);
-  const projectHref = hasExternalLink ? work.href : "/work";
-
-  const close = () => {
-    setActive(false);
-    setTimeout(onClose, 300);
-  };
+  const hasCaseStudyLink = work.href.startsWith("/work/");
+  const projectHref =
+    hasExternalLink || hasCaseStudyLink ? work.href : "/work";
 
   const isFirst = selectedWorkIndex === 0;
   const isLast = selectedWorkIndex === workList.length - 1;
@@ -72,49 +125,39 @@ export function WorkModal({
     <div
       className={`work-modal ${active ? "active" : ""}`}
       aria-hidden={!active}
-      onClick={(e) => {
+      onMouseDown={(e) => {
         if (e.target === e.currentTarget) close();
       }}
     >
       <div
+        ref={dialogRef}
         className="work-modal-wrapper"
         role="dialog"
         aria-modal="true"
-        aria-label={`${work.title} project details`}
+        aria-labelledby={`work-title-${work.id}`}
+        tabIndex={-1}
       >
         <div className="work-modal-content-left">
           <div className="work-image-wrapper">
-            {work.type === "Playground" ? (
-              <Image
-                src={work.bgMediaUrl}
-                alt={work.title}
-                fill
-                sizes="(max-width: 1024px) 80vw, 50vw"
-                className="object-cover"
-              />
-            ) : (
-              work.image.map((src, i) => (
-                <Image
-                  key={src}
-                  src={src}
-                  alt={`${work.title} project image`}
-                  fill
-                  sizes="(max-width: 1024px) 80vw, 50vw"
-                  style={{
-                    opacity: i === imageIndex ? 1 : 0,
-                    transition: "opacity 0.4s ease",
-                    objectFit: "cover",
-                  }}
-                />
-              ))
-            )}
+            <Image
+              src={
+                work.type === "Playground"
+                  ? work.bgMediaUrl
+                  : work.image[imageIndex] ?? work.image[0]
+              }
+              alt={`${work.title} project preview`}
+              fill
+              sizes="(max-width: 1024px) 80vw, 50vw"
+              className="object-cover"
+            />
           </div>
           {work.type !== "Playground" && (
             <>
               <div className="work-bg-image-wrapper">
                 <Image
                   src={work.bgMediaUrl}
-                  alt={`${work.title} background image`}
+                  alt=""
+                  aria-hidden="true"
                   fill
                   sizes="(max-width: 1024px) 90vw, 60vw"
                 />
@@ -122,36 +165,41 @@ export function WorkModal({
               <div className="black-overlay" />
             </>
           )}
-          <div className="close-btn" onClick={close}>
+          <button type="button" className="close-btn" aria-label="Close project details" onClick={close}>
             <div className="menu-horizontal-line" />
             <div className="menu-horizontal-line" />
-          </div>
+          </button>
         </div>
 
         <div className="work-modal-content-right">
           <div className="top-content">
-            <div className="work-header">{work.title}</div>
-            <div className="work-description">{work.description}</div>
+            <h2 id={`work-title-${work.id}`} className="work-header">
+              {work.title}
+            </h2>
+            <p className="work-description">{work.description}</p>
             <div className="work-info">
               <div className="work-tags">
                 <div className="role">{work.role}</div>
                 <div className="tech">{work.tags}</div>
               </div>
-              <Link
-                href={projectHref}
+                <Link
+                  href={projectHref}
                 className="project-link"
                 target={hasExternalLink ? "_blank" : undefined}
                 rel={hasExternalLink ? "noopener noreferrer" : undefined}
-              >
-                <div className="visit-site">
-                  {hasExternalLink ? "View live site" : "View all projects"}
-                </div>
+                >
+                  <span className="visit-site">
+                    {hasExternalLink
+                      ? "View live site"
+                      : hasCaseStudyLink
+                        ? "View case study"
+                        : "View all projects"}
+                  </span>
                 <div className="external-icon">
                   <Image
                     src="/icons/arrow.svg"
-                    alt={
-                      hasExternalLink ? "external link" : "view all projects"
-                    }
+                    alt=""
+                    aria-hidden="true"
                     fill
                     sizes="20px"
                   />
@@ -163,35 +211,41 @@ export function WorkModal({
           <div className="bottom-content">
             <div />
             <div className="navigations">
-              <div
+              <button
+                type="button"
                 className={`btn-left ${isFirst ? "disabled" : ""}`}
+                aria-label="Previous project"
+                disabled={isFirst}
                 onClick={() => !isFirst && onIndexChange(selectedWorkIndex - 1)}
               >
                 <Image
                   src="/icons/arrow.svg"
-                  alt="previous"
+                  alt=""
                   fill
                   sizes="20px"
                 />
-              </div>
-              <div
+              </button>
+              <button
+                type="button"
                 className={`btn-right ${isLast ? "disabled" : ""}`}
+                aria-label="Next project"
+                disabled={isLast}
                 onClick={() => !isLast && onIndexChange(selectedWorkIndex + 1)}
               >
                 <Image
                   src="/icons/arrow.svg"
-                  alt="next"
+                  alt=""
                   fill
                   sizes="20px"
                 />
-              </div>
+              </button>
             </div>
           </div>
 
-          <div className="close-btn" onClick={close}>
+          <button type="button" className="close-btn" aria-label="Close project details" onClick={close}>
             <div className="menu-horizontal-line" />
             <div className="menu-horizontal-line" />
-          </div>
+          </button>
         </div>
       </div>
     </div>

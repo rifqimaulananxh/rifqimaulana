@@ -5,19 +5,19 @@ Personal portfolio and software engineering showcase for [rifqimaulana.dev](http
 ## Pages
 
 - **Home** — hero, featured work, services overview
-- **Work** — selected projects, categorized (web / backend / design / playground)
+- **Work** — selected projects, categorized (web / design / playground)
 - **Services** — offerings + FAQ
 - **About Me** — background and how I work
 - **Contact** — email + WhatsApp inquiry form
 
 ## Stack
 
-- **Next.js 16** (App Router, Turbopack) — fully static, SSG
+- **Next.js 16** (App Router, Turbopack)
 - **React 19** + **TypeScript** (strict)
 - **Tailwind CSS v4**
 - **GSAP** + **@gsap/react** + **SplitText** — scroll-driven animations
 - **Lenis** — smooth scrolling
-- **Motion** (Framer Motion) — route transitions
+- **System font stack** — offline-safe typography with no build-time font request
 
 ## Getting started
 
@@ -30,7 +30,7 @@ pnpm dev        # http://localhost:3000
 
 ```bash
 pnpm lint       # eslint
-pnpm build      # production build (SSG)
+pnpm build      # production build
 pnpm start      # serve the production build
 ```
 
@@ -41,6 +41,6 @@ same network (e.g. testing on your phone). See `.env.example`.
 
 ## Deploy
 
-Fully static — deploy the `pnpm build` output to any static host (Vercel,
-Netlify, Cloudflare Pages). Add the `rifqimaulana.dev` domain in your host's
-DNS settings.
+Build the app with `pnpm build` and run it with `pnpm start`, or deploy it to a
+Next.js-compatible host such as Vercel. Add the `rifqimaulana.dev` domain in
+your host's DNS settings.

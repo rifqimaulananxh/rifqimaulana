@@ -3,6 +3,8 @@
 import { BRAND_IDENTITY, FOOTER_LINKS } from "@/lib/constants";
 import { scrollToTarget } from "@/hooks/useLenis";
 
+const CURRENT_YEAR = new Date().getFullYear();
+
 export function Footer() {
   return (
     <footer className="footer">
@@ -13,24 +15,20 @@ export function Footer() {
 
         <div className="footer-bottom">
           <span className="text-x-small footer-copy">
-            ©2026 {BRAND_IDENTITY.name}
+            ©{CURRENT_YEAR} {BRAND_IDENTITY.name}
           </span>
 
           <div className="social-navigation">
-            <span
+            <button
+              type="button"
               className="text-x-small"
-              style={{ cursor: "pointer" }}
               onClick={() => scrollToTarget(0)}
             >
               Back to top
-            </span>
+            </button>
           </div>
 
-          <span
-            className="text-x-small footer-credit"
-            style={{ cursor: "pointer" }}
-            onClick={() => scrollToTarget(0)}
-          >
+          <span className="text-x-small footer-credit">
             Designed &amp; Developed by {BRAND_IDENTITY.name}
           </span>
         </div>

@@ -1,235 +1,251 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type MouseEvent } from "react";
+import Image from "next/image";
+import Link from "next/link";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { SELECTED_WORKS } from "@/lib/projects";
+import { scrollToTarget } from "@/hooks/useLenis";
 import { navigateTo } from "@/lib/navigation";
-import { WorkItem } from "./WorkItem";
-import { WorkModal } from "./WorkModal";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function SelectedWork() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const length = SELECTED_WORKS.length;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeWork = SELECTED_WORKS[activeIndex] ?? SELECTED_WORKS[0];
 
   useGSAP(
     () => {
       const section = sectionRef.current;
       if (!section) return;
 
-      const mm = gsap.matchMedia();
+      const mediaTrack = section.querySelector<HTMLElement>(
+        "[data-work-media-track]"
+      );
+      const cards = gsap.utils.toArray<HTMLElement>(
+        "[data-work-card]",
+        section
+      );
+      const revealImages = gsap.utils.toArray<HTMLElement>(
+        "[data-image-reveal]",
+        section
+      );
+      const markers = gsap.utils.toArray<HTMLElement>(
+        "[data-work-marker]",
+        section
+      );
+      const markerTrack = section.querySelector<HTMLElement>(
+        ".reference-work-markers"
+      );
+      if (
+        !mediaTrack ||
+        !cards.length ||
+        !markers.length ||
+        !markerTrack
+      ) {
+        return;
+      }
 
-      const setup = (
-        startH: number,
-        endH: number,
-        startW: number,
-        endW: number,
-        animateWidth: boolean,
-        extra = 0
-      ) => {
-        gsap.set(section, { height: `${length * (endH + extra)}svh` });
+      if (prefersReducedMotion()) return;
 
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        });
-
-        const items: {
-          hStart: number;
-          hEnd: number;
-          infoFadeStart: number;
-          wGrowEnd: number;
-          wShrinkStart: number;
-          wShrinkEnd: number;
-        }[] = [];
-
-        // Compute per-item start/end scroll progress via binary search
-        for (let idx = 0; idx < length; idx++) {
-          // height of item `i` at progress `t`
-          const itemHeight = (i: number, t: number) => {
-            const d = items[i];
-            if (t <= d.hStart) return startH + extra;
-            if (t >= d.hEnd) return endH + extra;
-            return (
-              startH +
-              extra +
-              ((endH - startH) * (t - d.hStart)) / (d.hEnd - d.hStart)
-            );
-          };
-
-          // cumulative height of first `idx` items at progress `t`
-          const cumulative = (t: number) => {
-            let total = 0;
-            for (let i = 0; i < idx; i++) total += itemHeight(i, t);
-            return 100 - t + total;
-          };
-
-          // binary search: find t where fn(t) === target
-          const binarySearch = (fn: (t: number) => number, target: number) => {
-            let lo = 0;
-            let hi = 3000;
-            for (let i = 0; i < 50; i++) {
-              const mid = (lo + hi) / 2;
-              if (fn(mid) > target) lo = mid;
-              else hi = mid;
-            }
-            return (lo + hi) / 2;
-          };
-
-          const hStart = binarySearch(cumulative, 100);
-          const hEnd = binarySearch(cumulative, 10);
-          const infoFadeStart = binarySearch(cumulative, 70);
-
-          items.push({
-            hStart,
-            hEnd,
-            infoFadeStart,
-            wGrowEnd: 0,
-            wShrinkStart: 0,
-            wShrinkEnd: 0,
-          });
-
-          if (animateWidth) {
-            // center of item `idx`
-            const centerFn = (t: number) => cumulative(t) + itemHeight(idx, t) / 2;
-            const wGrowEnd = binarySearch(centerFn, 55);
-            const wShrinkStart = binarySearch(centerFn, 45);
-            const wShrinkEnd = binarySearch(
-              (t: number) => cumulative(t) + itemHeight(idx, t),
-              0
-            );
-            items[idx] = {
-              ...items[idx],
-              wGrowEnd,
-              wShrinkStart,
-              wShrinkEnd,
-            };
-          }
-        }
-
-        const imgWrappers = gsap.utils.toArray<HTMLElement>(
-          ".work-img-wrapper",
-          section
-        );
-        const infoWrappers = gsap.utils.toArray<HTMLElement>(
-          ".work-info-wrapper",
-          section
-        );
-
-        imgWrappers.forEach((el, idx) => {
-          if (!el) return;
-          const d = items[idx];
-          const infoEl = infoWrappers[idx];
-
-          tl.fromTo(
-            el,
-            { height: `${startH}svh` },
-            {
-              height: `${endH}svh`,
-              ease: "none",
-              duration: d.hEnd - d.hStart,
+      revealImages.forEach((image, index) => {
+        gsap.fromTo(
+          image,
+          { height: "0%" },
+          {
+            height: "100%",
+            duration: 0.7,
+            delay: 0.15 * index,
+            ease: "power1.out",
+            scrollTrigger: {
+              trigger: image,
+              start: "top bottom",
             },
-            d.hStart
-          );
-
-          if (infoEl) {
-            tl.fromTo(
-              infoEl,
-              { opacity: 0 },
-              {
-                opacity: 1,
-                ease: "none",
-                duration: 20,
-              },
-              d.infoFadeStart
-            );
           }
+        );
+      });
 
-          if (animateWidth) {
-            tl.fromTo(
-              el,
-              { width: `${startW}vw` },
-              {
-                width: `${endW}vw`,
-                ease: "none",
-                duration: d.wGrowEnd - d.hStart,
-              },
-              d.hStart
-            );
-            tl.fromTo(
-              el,
-              { width: `${endW}vw` },
-              {
-                width: `${startW}vw`,
-                ease: "none",
-                duration: d.wShrinkEnd - d.wShrinkStart,
-                immediateRender: false,
-              },
-              d.wShrinkStart
-            );
-          } else {
-            gsap.set(el, { width: `${startW}vw` });
-          }
+      const mediaQuery = gsap.matchMedia();
+      mediaQuery.add("(min-width: 1200px)", () => {
+            let lastIndex = -1;
+           const getDistance = () => {
+             const cardHeight = cards[0]?.getBoundingClientRect().height ?? 0;
+             const gap = Number.parseFloat(getComputedStyle(mediaTrack).gap) || 0;
+             return cardHeight + gap;
+           };
+           const setActive = (index: number) => {
+             if (index === lastIndex) return;
+             lastIndex = index;
+             setActiveIndex(index);
+             gsap.to(mediaTrack, {
+               y: () => -getDistance() * index,
+               duration: 0.7,
+               ease: "power3.out",
+               overwrite: true,
+             });
+           };
+
+           gsap.set(mediaTrack, { y: 0 });
+           lastIndex = 0;
+
+           const triggers = markers.map((marker, index) =>
+            ScrollTrigger.create({
+              trigger: marker,
+              start: "top 52%",
+              end: "bottom 52%",
+              onEnter: () => setActive(index),
+               onEnterBack: () => setActive(index),
+             })
+           );
+
+           return () => {
+             triggers.forEach((trigger) => trigger.kill());
+             gsap.killTweensOf(mediaTrack);
+           };
         });
 
-        tl.to({}, { duration: 0.01 }, length * (endH + extra) + 100);
-
-        return tl;
-      };
-
-      mm.add("(min-width: 1025px)", () => {
-        setup(28, 72, 48, 60, true, 0);
-      });
-      mm.add("(max-width: 1024px)", () => {
-        setup(25, 50, 100, 100, false, 20);
-      });
+      return () => mediaQuery.revert();
     },
     { scope: sectionRef }
   );
 
+  const jumpToWork = (id: string) => {
+    if (typeof window === "undefined") return;
+    const index = SELECTED_WORKS.findIndex((work) => work.id === id);
+    if (index >= 0) setActiveIndex(index);
+    const isMobile = window.matchMedia("(max-width: 1024px)").matches;
+    const target = isMobile ? `#work-card-${id}` : `#work-marker-${id}`;
+    scrollToTarget(
+      target,
+      isMobile ? -window.innerHeight * 0.1 : -window.innerHeight * 0.48
+    );
+  };
+
+  const handleProjectClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+    navigateTo(href);
+  };
+
   return (
     <>
-      <section ref={sectionRef} className="selected-work">
-        <div className="selected-work-header container">
-          <span className="text-small-1">Selected projects</span>
-          <span className="text-small">Web products / Interfaces / Systems</span>
+      <section ref={sectionRef} id="work-section" className="reference-work-section">
+        <div className="reference-work-sticky">
+          <div className="reference-work-panel">
+            <div className="reference-work-index">
+              <div className="reference-work-heading">
+                <h2>Selected work</h2>
+              </div>
+
+              <div className="reference-work-names">
+                <div className="reference-work-current-stack" aria-live="polite">
+                  {SELECTED_WORKS.map((work, index) => (
+                    <button
+                      key={work.id}
+                      type="button"
+                      className={`reference-work-current-layer ${
+                        activeIndex === index ? "active" : ""
+                      }`}
+                      aria-hidden={activeIndex !== index}
+                      tabIndex={activeIndex === index ? 0 : -1}
+                      aria-label={`Jump to ${work.title}`}
+                      onClick={() => jumpToWork(work.id)}
+                    >
+                      <span className="reference-work-badge">Selected Work</span>
+                      <strong>{work.title}</strong>
+                    </button>
+                  ))}
+                </div>
+
+                <div className="reference-work-mobile-names">
+                  {SELECTED_WORKS.map((work, index) => (
+                    <button
+                      key={work.id}
+                      type="button"
+                      className={`reference-work-name ${
+                        activeIndex === index ? "active" : ""
+                      }`}
+                      onClick={() => jumpToWork(work.id)}
+                    >
+                      <span className="reference-work-name-meta">
+                        <span>{String(index + 1).padStart(2, "0")}</span>
+                        <span>{work.tags}</span>
+                      </span>
+                      <strong>{work.title}</strong>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="reference-work-details">
+                <p>{activeWork.description}</p>
+              </div>
+            </div>
+
+            <div className="reference-work-media">
+              <div className="reference-work-viewport">
+                <div className="reference-work-media-track" data-work-media-track>
+                  {SELECTED_WORKS.map((work) => (
+                    <Link
+                      key={work.id}
+                      id={`work-card-${work.id}`}
+                      href={work.href}
+                      className="reference-work-card"
+                      data-work-card
+                      aria-label={`Open ${work.title} case study`}
+                      onClick={(event) => handleProjectClick(event, work.href)}
+                    >
+                      <Image
+                        src={work.image[0]}
+                        alt={`${work.title} project preview`}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 56vw"
+                        className="image-reveal"
+                        data-image-reveal
+                      />
+                      <span className="reference-work-card-shade" />
+                      <span className="reference-work-card-caption">
+                        <span className="reference-work-card-action">
+                          {work.tags}
+                        </span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        {SELECTED_WORKS.map((work, i) => (
-          <WorkItem
-            key={work.id || i}
-            item={work}
-            index={i}
-            onClick={() => setSelectedIndex(i)}
-          />
-        ))}
-        {selectedIndex !== null && (
-          <WorkModal
-            selectedWorkIndex={selectedIndex}
-            workList={SELECTED_WORKS}
-            onClose={() => setSelectedIndex(null)}
-            onIndexChange={setSelectedIndex}
-          />
-        )}
+
+        <div className="reference-work-markers" aria-hidden="true">
+          {SELECTED_WORKS.map((work) => (
+            <div
+              key={work.id}
+              id={`work-marker-${work.id}`}
+              className={`reference-work-marker ${
+                work.id === SELECTED_WORKS[0]?.id
+                  ? "reference-work-marker-first"
+                  : ""
+              }`}
+              data-work-marker
+            />
+          ))}
+        </div>
       </section>
-      <div
-        className="explore-link"
-        onClick={() => navigateTo("/work")}
-        role="link"
-        tabIndex={0}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            navigateTo("/work");
-          }
-        }}
-      >
-        <span className="explore-text">View all projects</span>
-      </div>
+
     </>
   );
 }

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText } from "@/lib/gsap";
 import { SERVICES_PAGE, SERVICES_QUOTE } from "@/lib/pages";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function ServiceListSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -12,7 +13,7 @@ export function ServiceListSection() {
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || prefersReducedMotion()) return;
 
       const quote = section.querySelector(".services-quote");
       if (quote) {
@@ -66,8 +67,11 @@ export function ServiceListSection() {
                   key={ci}
                   className={`accordion-item ${isOpen ? "active" : ""}`}
                 >
-                  <div
+                  <button
+                    type="button"
                     className="accordion-heading"
+                    aria-expanded={isOpen}
+                    aria-controls={`service-panel-${ci}`}
                     onClick={() => setOpenIndex(isOpen ? null : ci)}
                   >
                     <span className="accordion-index">
@@ -77,21 +81,28 @@ export function ServiceListSection() {
                       {col.heading}
                     </span>
                     <span className="accordion-toggle">+</span>
-                  </div>
-                  <div className="accordion-body">
-                    <p className="accordion-description text-small">
-                      {col.description}
-                    </p>
-                    <ul className="accordion-list">
-                      {col.items.map((item, i) => (
-                        <li key={`${ci}-${i}`} className="text-medium">
-                          <span className="text-small-1">
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  </button>
+                  <div
+                    id={`service-panel-${ci}`}
+                    className="accordion-body"
+                    role="region"
+                    aria-hidden={!isOpen}
+                  >
+                    <div className="accordion-body-inner">
+                      <p className="accordion-description text-small">
+                        {col.description}
+                      </p>
+                      <ul className="accordion-list">
+                        {col.items.map((item, i) => (
+                          <li key={`${ci}-${i}`} className="text-medium">
+                            <span className="text-small-1">
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
               );

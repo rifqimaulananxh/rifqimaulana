@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { FAQ_ITEMS } from "@/lib/pages";
 import { navigateTo } from "@/lib/navigation";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -13,7 +14,7 @@ export function FaqSection() {
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || prefersReducedMotion()) return;
 
       gsap.fromTo(
         section.querySelectorAll(".faq-item"),
@@ -36,7 +37,7 @@ export function FaqSection() {
       <div className="container">
         <div className="faq-wrapper">
           <div className="heading-wrapper">
-            <h1>FAQ</h1>
+            <h2 className="faq-heading">FAQ</h2>
             <div className="sub-heading-wrapper">
               <span className="text-x-small">
                 Can&apos;t find the answer you&apos;re looking for?
@@ -61,17 +62,25 @@ export function FaqSection() {
                   key={i}
                   className={`faq-item ${isOpen ? "active" : ""}`}
                 >
-                  <div
+                  <button
+                    type="button"
                     className="question-wrapper"
+                    aria-expanded={isOpen}
+                    aria-controls={`faq-panel-${i}`}
                     onClick={() => setOpenIndex(isOpen ? null : i)}
                   >
                     <span className="question">{item.q}</span>
-                    <div className="icon" />
-                  </div>
-                  <div className="answer-wrapper">
-                    <span className="answer-inner">
-                      <p>{item.a}</p>
-                    </span>
+                    <span className="icon" />
+                  </button>
+                  <div
+                    id={`faq-panel-${i}`}
+                    className="answer-wrapper"
+                    role="region"
+                    aria-hidden={!isOpen}
+                  >
+                      <div className="answer-inner">
+                        <p>{item.a}</p>
+                      </div>
                   </div>
                 </div>
               );

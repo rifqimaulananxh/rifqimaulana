@@ -8,6 +8,7 @@ import {
   ROUTE_NAMES,
   consumePendingHash,
 } from "@/lib/navigation";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function RouteTransition() {
   const router = useRouter();
@@ -20,12 +21,18 @@ export function RouteTransition() {
   const playIn = useCallback(
     (href: string) => {
       if (navigatingRef.current) return;
+      if (prefersReducedMotion()) {
+        router.push(href);
+        return;
+      }
       navigatingRef.current = true;
       const panel = panelRef.current;
       if (!panel) return;
 
       const [path] = href.split("#");
-      setLabel(ROUTE_NAMES[path] || "Home");
+      setLabel(
+        ROUTE_NAMES[path] || (path.startsWith("/work/") ? "Work" : "Home")
+      );
 
       const lenis = getLenis();
       lenis?.stop();
@@ -70,7 +77,10 @@ export function RouteTransition() {
   useEffect(() => {
     if (prevPath.current === null) {
       prevPath.current = pathname;
-      setLabel(ROUTE_NAMES[pathname] || "Home");
+      setLabel(
+        ROUTE_NAMES[pathname] ||
+          (pathname.startsWith("/work/") ? "Work" : "Home")
+      );
       return;
     }
     if (prevPath.current === pathname) return;

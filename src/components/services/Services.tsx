@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { SERVICES_DATA } from "@/lib/services";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function Services() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -13,7 +14,7 @@ export function Services() {
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || prefersReducedMotion()) return;
 
       const textEls = section.querySelectorAll(".service-text");
       const imgEls = section.querySelectorAll(".service-img-wrapper");
@@ -26,9 +27,9 @@ export function Services() {
             { height: "0px" },
             {
               height: "25px",
-              duration: 1,
-              ease: "power4.out",
-              scrollTrigger: { trigger: el, start: "top 90%" },
+              duration: 0.7,
+              ease: "power1.out",
+              scrollTrigger: { trigger: el, start: "top bottom" },
             }
           );
         });
@@ -41,9 +42,9 @@ export function Services() {
             { height: "0px" },
             {
               height: "75px",
-              duration: 1,
-              ease: "power4.out",
-              scrollTrigger: { trigger: el, start: "top 95%" },
+              duration: 0.7,
+              ease: "power1.out",
+              scrollTrigger: { trigger: el, start: "top bottom" },
             }
           );
         });
@@ -61,17 +62,23 @@ export function Services() {
           }
         );
       });
+
+      return () => mm.revert();
     },
     { scope: sectionRef }
   );
 
   return (
-    <section ref={sectionRef} id="Services" className="services-section">
+    <section
+      ref={sectionRef}
+      id="Services"
+      className="services-section"
+      aria-labelledby="home-services-heading"
+    >
       <div className="container">
-        <div className="services-header">
-          <span className="text-small-1">Capabilities</span>
-          <span className="text-small">From interface to reliable launch</span>
-        </div>
+        <h2 id="home-services-heading" className="sr-only">
+          Services
+        </h2>
         <div className="service-list">
           {SERVICES_DATA.map((item, i) => {
             if ("title" in item) {
@@ -92,7 +99,8 @@ export function Services() {
                     <Image
                       className="img-1"
                       src={img1}
-                      alt="service-img-1"
+                      alt=""
+                      aria-hidden="true"
                       fill
                       sizes="(max-width: 1024px) 40px, 110px"
                       style={{ objectFit: "cover" }}
@@ -100,7 +108,8 @@ export function Services() {
                     <Image
                       className="img-2"
                       src={img2}
-                      alt="service-img-2"
+                      alt=""
+                      aria-hidden="true"
                       fill
                       sizes="(max-width: 1024px) 40px, 110px"
                       style={{

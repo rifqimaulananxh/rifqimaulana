@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { ABOUT_PAGE } from "@/lib/pages";
+import { prefersReducedMotion } from "@/lib/motion";
 
 function AboutHeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -13,7 +14,7 @@ function AboutHeroSection() {
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || prefersReducedMotion()) return;
 
       const heading = section.querySelector(".heading");
       const description = section.querySelector(".description");
@@ -35,8 +36,13 @@ function AboutHeroSection() {
       if (img) {
         gsap.fromTo(
           img,
-          { yPercent: 10, opacity: 0 },
-          { yPercent: 0, opacity: 1, duration: 1.2, delay: 0.6, ease: "power3.out" }
+          { height: "0%" },
+          {
+            height: "100%",
+            duration: 0.7,
+            delay: 0.15,
+            ease: "power1.out",
+          }
         );
       }
       if (scrollText) {
@@ -57,12 +63,13 @@ function AboutHeroSection() {
           <h1 className="heading split-n-wrap">{ABOUT_PAGE.heading}</h1>
           <div className="image-wrapper">
             <Image
-              className="hero-img"
+              className="hero-img image-reveal"
               src="/images/portofolio/rifqi.webp"
               alt={`Image of ${ABOUT_PAGE.heading}`}
               fill
               sizes="(max-width: 1024px) 90vw, 40vw"
               style={{ objectFit: "cover" }}
+              data-image-reveal
             />
           </div>
           <p className="description text-medium split-n-wrap">
@@ -91,6 +98,13 @@ function HistorySection() {
       const paras = section.querySelectorAll(".para");
       const images = section.querySelectorAll(".image-container .image-wrapper");
 
+      if (prefersReducedMotion()) {
+        [points, paras, images].forEach((group) =>
+          group.forEach((element) => element.classList.add("active"))
+        );
+        return;
+      }
+
       const setActive = (idx: number) => {
         points.forEach((el, i) => el.classList.toggle("active", i === idx));
         paras.forEach((el, i) => el.classList.toggle("active", i === idx));
@@ -117,13 +131,22 @@ function HistorySection() {
           },
         });
       });
+
+      return () => mm.revert();
     },
     { scope: sectionRef }
   );
 
   return (
-    <section ref={sectionRef} className="history-section">
+    <section
+      ref={sectionRef}
+      className="history-section"
+      aria-labelledby="history-heading"
+    >
       <div className="container">
+        <h2 id="history-heading" className="sr-only">
+          Journey, background, and how I work
+        </h2>
         <div className="history-wrapper">
           <div className="point-wrapper">
             {ABOUT_PAGE.points.map((point, i) => (
@@ -141,9 +164,10 @@ function HistorySection() {
                 key={i}
                 className={`image-wrapper ${i === 0 ? "active" : ""}`}
               >
-                <Image
-                  src="/images/portofolio/rifqi.webp"
-                  alt="about image"
+                  <Image
+                    src="/images/portofolio/rifqi.webp"
+                    alt=""
+                    aria-hidden="true"
                   fill
                   sizes="(max-width: 1024px) 70vw, 30vw"
                   style={{ objectFit: "cover" }}
@@ -176,7 +200,7 @@ function BeyondWorkSection() {
       const track = trackRef.current;
       if (!track) return;
 
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+       if (prefersReducedMotion()) {
         return;
       }
 
@@ -195,8 +219,15 @@ function BeyondWorkSection() {
         ease: "none",
         repeat: -1,
       });
+      const viewport = sectionRef.current?.querySelector(".marquee-viewport");
+      const pause = () => tween.pause();
+      const resume = () => tween.resume();
+      viewport?.addEventListener("mouseenter", pause);
+      viewport?.addEventListener("mouseleave", resume);
 
       return () => {
+        viewport?.removeEventListener("mouseenter", pause);
+        viewport?.removeEventListener("mouseleave", resume);
         tween.kill();
       };
     },
@@ -207,7 +238,7 @@ function BeyondWorkSection() {
     <section ref={sectionRef} className="beyond-work-section">
       <div className="container">
         <div className="heading">
-          <span className="text-small-1">Beyond work</span>
+           <h2 className="text-small-1">Beyond work</h2>
         </div>
         <div className="marquee-viewport">
           <div ref={trackRef} className="hobby-list-wrapper">
@@ -216,7 +247,7 @@ function BeyondWorkSection() {
                 <div
                   key={`${dup}-${i}`}
                   className="hobby-item"
-                  style={{ cursor: "pointer" }}
+                  aria-hidden={dup === 1}
                 >
                   <div className="img-wrapper">
                     <Image
