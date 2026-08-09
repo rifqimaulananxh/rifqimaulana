@@ -4,7 +4,7 @@ import { ContactPage } from "@/components/contact/ContactPage";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Start a project conversation with Rifqi Maulana or reach out directly on WhatsApp.",
+    "Tell Rifqi Maulana what you are building, where you are stuck, and what you need next.",
   alternates: {
     canonical: "/contact",
   },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     url: "/contact",
     siteName: "Rifqi Maulana",
     title: "Contact — Rifqi Maulana",
-    description: "Tell me what you are building and what you need next.",
+    description: "Share what you are building, where you are stuck, and what you need next.",
     images: [
       {
         url: "/og.png",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Contact — Rifqi Maulana",
-    description: "Tell me what you are building and what you need next.",
+    description: "Share what you are building, where you are stuck, and what you need next.",
     images: ["/og.png"],
   },
 };

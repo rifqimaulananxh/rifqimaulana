@@ -4,7 +4,7 @@ import { WorkListSection } from "@/components/work/WorkListSection";
 export const metadata: Metadata = {
   title: "Work",
   description:
-    "Selected web products, interfaces, and interactive experiments by Rifqi Maulana.",
+    "A selection of web products, interfaces, and interactive experiments by Rifqi Maulana.",
   alternates: {
     canonical: "/work",
   },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     url: "/work",
     siteName: "Rifqi Maulana",
     title: "Work — Rifqi Maulana",
-    description: "Selected web products, interfaces, and interactive experiments.",
+    description: "Web products, interfaces, and experiments shaped from direction through launch.",
     images: [
       {
         url: "/og.png",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Work — Rifqi Maulana",
     description:
-      "Selected web products, interfaces, and interactive experiments by Rifqi Maulana.",
+      "Web products, interfaces, and experiments shaped from direction through launch.",
     images: ["/og.png"],
   },
 };

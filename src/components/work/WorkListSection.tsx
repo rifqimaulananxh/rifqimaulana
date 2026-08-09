@@ -11,6 +11,7 @@ import { WorkCard } from "./WorkCard";
 import { WorkModal } from "./WorkModal";
 import type { Project } from "@/lib/projects";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 const ALL_WORKS: Project[] = [...SELECTED_WORKS, ...PLAYGROUND_ITEMS];
 
@@ -20,6 +21,7 @@ export function WorkListSection() {
     null
   );
   const [scrollProgress, setScrollProgress] = useState(0);
+  const introReady = useIntroReady();
   const sectionRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const thumbRef = useRef<HTMLButtonElement>(null);
@@ -130,7 +132,7 @@ export function WorkListSection() {
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || prefersReducedMotion()) return;
+      if (!section || !introReady || prefersReducedMotion()) return;
 
       gsap.fromTo(
         section.querySelectorAll(".work-category-item"),
@@ -145,13 +147,13 @@ export function WorkListSection() {
         }
       );
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || prefersReducedMotion()) return;
+      if (!section || !introReady || prefersReducedMotion()) return;
 
       gsap.fromTo(
         section.querySelectorAll(".work-card-item"),
@@ -168,7 +170,7 @@ export function WorkListSection() {
     },
     {
       scope: sectionRef,
-      dependencies: [activeCategory],
+      dependencies: [activeCategory, introReady],
       revertOnUpdate: true,
     }
   );
@@ -178,8 +180,8 @@ export function WorkListSection() {
       <div className="container work-page-intro">
         <h1 className="work-page-heading">Selected work</h1>
         <p className="work-page-description">
-          Web products, interfaces, and interactive experiments built from brief
-          to launch.
+          A selection of web products, interfaces, and experiments shaped from
+          early direction through launch.
         </p>
       </div>
       <div className="container">

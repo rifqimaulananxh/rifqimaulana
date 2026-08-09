@@ -6,15 +6,17 @@ import { gsap } from "@/lib/gsap";
 import { FAQ_ITEMS } from "@/lib/pages";
 import { navigateTo } from "@/lib/navigation";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 export function FaqSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const sectionRef = useRef<HTMLElement>(null);
+  const introReady = useIntroReady();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || prefersReducedMotion()) return;
+      if (!section || !introReady || prefersReducedMotion()) return;
 
       gsap.fromTo(
         section.querySelectorAll(".faq-item"),
@@ -29,7 +31,7 @@ export function FaqSection() {
         }
       );
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (

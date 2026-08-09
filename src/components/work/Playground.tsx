@@ -8,6 +8,7 @@ import { PLAYGROUND_ITEMS } from "@/lib/playground";
 import { WorkModal } from "./WorkModal";
 import type { Project } from "@/lib/projects";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 interface PlaygroundItemProps {
   item: Project;
@@ -66,6 +67,7 @@ export function Playground({ limit }: { limit?: number }) {
     null
   );
   const sectionRef = useRef<HTMLElement>(null);
+  const introReady = useIntroReady();
   const items =
     typeof limit === "number"
       ? PLAYGROUND_ITEMS.slice(0, limit)
@@ -73,7 +75,7 @@ export function Playground({ limit }: { limit?: number }) {
 
   useGSAP(
     () => {
-      if (prefersReducedMotion()) return;
+      if (!introReady || prefersReducedMotion()) return;
       gsap
         .utils.toArray<HTMLElement>(".playground-grid-item")
         .forEach((el, i) => {
@@ -96,7 +98,7 @@ export function Playground({ limit }: { limit?: number }) {
           }
         });
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (

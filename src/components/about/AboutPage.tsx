@@ -7,14 +7,16 @@ import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { ABOUT_PAGE } from "@/lib/pages";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 function AboutHeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const introReady = useIntroReady();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || prefersReducedMotion()) return;
+      if (!section || !introReady || prefersReducedMotion()) return;
 
       const heading = section.querySelector(".heading");
       const description = section.querySelector(".description");
@@ -53,7 +55,7 @@ function AboutHeroSection() {
         );
       }
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (
@@ -88,11 +90,12 @@ function AboutHeroSection() {
 function HistorySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const currentRef = useRef(0);
+  const introReady = useIntroReady();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || !introReady) return;
 
       const points = section.querySelectorAll(".point-mask");
       const paras = section.querySelectorAll(".para");
@@ -134,7 +137,7 @@ function HistorySection() {
 
       return () => mm.revert();
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (
@@ -194,13 +197,14 @@ function HistorySection() {
 function BeyondWorkSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
+  const introReady = useIntroReady();
 
   useGSAP(
     () => {
       const track = trackRef.current;
-      if (!track) return;
+      if (!track || !introReady) return;
 
-       if (prefersReducedMotion()) {
+      if (prefersReducedMotion()) {
         return;
       }
 
@@ -213,25 +217,51 @@ function BeyondWorkSection() {
           ? duplicateStart.offsetLeft - firstItem.offsetLeft
           : track.scrollWidth / 2;
 
+      let isInView = false;
       const tween = gsap.to(track, {
         x: () => -distance(),
         duration: 30,
         ease: "none",
         repeat: -1,
+        paused: true,
+      });
+      const sectionTrigger = ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        onEnter: () => {
+          isInView = true;
+          tween.play();
+        },
+        onEnterBack: () => {
+          isInView = true;
+          tween.play();
+        },
+        onLeave: () => {
+          isInView = false;
+          tween.pause();
+        },
+        onLeaveBack: () => {
+          isInView = false;
+          tween.pause();
+        },
       });
       const viewport = sectionRef.current?.querySelector(".marquee-viewport");
       const pause = () => tween.pause();
-      const resume = () => tween.resume();
+      const resume = () => {
+        if (isInView) tween.resume();
+      };
       viewport?.addEventListener("mouseenter", pause);
       viewport?.addEventListener("mouseleave", resume);
 
       return () => {
         viewport?.removeEventListener("mouseenter", pause);
         viewport?.removeEventListener("mouseleave", resume);
+        sectionTrigger.kill();
         tween.kill();
       };
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (

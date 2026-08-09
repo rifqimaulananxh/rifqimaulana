@@ -11,7 +11,7 @@ Portfolio pribadi berisi halaman Home, Work (Karya), Services (Layanan), About M
 Fokus proyek:
 
 - Animasi halus (smooth scroll, reveal saat scroll, transisi antar halaman).
-- Performa tinggi (tanpa preloader, gambar lokal teroptimasi, dan motion yang dapat dimatikan).
+- Performa tinggi (preloader singkat, gambar lokal teroptimasi, dan motion yang dapat dimatikan).
 - SEO lengkap (sitemap, robots, metadata, JSON-LD).
 - Responsif (mobile-first, breakpoint 1024px / 767px / 479px).
 
@@ -149,7 +149,7 @@ pnpm lint          # ESLint
 - Website mula-mula dibuat sebagai clone satu halaman dari Roshan Sahu, lalu di-refactor menjadi multi-page (commit `882b798`).
 - Placeholder diganti dengan karya foto restorasi asli (commit `28d3a05`).
 - Audit SEO lengkap + perbaikan stabilitas animasi (commit `c1f373f`).
-- Implementasi terbaru menghapus preloader yang menghambat first paint, menghormati `prefers-reduced-motion`, memperbaiki semantik form/drawer/modal, dan membersihkan komponen lama yang sudah tidak dipakai.
+- Implementasi terbaru memakai preloader intro singkat yang menahan animasi section sampai siap, menghormati `prefers-reduced-motion`, memperbaiki semantik form/drawer/modal, dan membersihkan komponen lama yang sudah tidak dipakai.
 
 ---
 

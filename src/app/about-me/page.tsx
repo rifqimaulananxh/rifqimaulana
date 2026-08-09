@@ -4,7 +4,7 @@ import { AboutPage } from "@/components/about/AboutPage";
 export const metadata: Metadata = {
   title: "About Me",
   description:
-    "About Rifqi Maulana, a software engineer based in Indonesia building reliable web products and thoughtful interfaces.",
+    "About Rifqi Maulana, a software engineer in Indonesia working across product interfaces and backend systems.",
   alternates: {
     canonical: "/about-me",
   },
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     url: "/about-me",
     siteName: "Rifqi Maulana",
     title: "About Me — Rifqi Maulana",
-    description: "The journey, background, and working principles behind Rifqi Maulana.",
+    description: "The journey, working principles, and product approach behind Rifqi Maulana.",
     images: [
       {
         url: "/og.png",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About Me — Rifqi Maulana",
     description:
-      "The journey, background, and working principles behind Rifqi Maulana.",
+      "The journey, working principles, and product approach behind Rifqi Maulana.",
     images: ["/og.png"],
   },
 };

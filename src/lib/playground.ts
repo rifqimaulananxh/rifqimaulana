@@ -5,7 +5,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "depth-scroll",
     title: "Depth Scroll",
     description:
-      "A gallery where images are arranged along the z-axis to create a convincing 3D effect.",
+      "A depth-based gallery experiment that layers images along the z-axis to create a convincing 3D effect.",
     tags: "EXPERIMENT",
     role: "WebGL / Three.js",
     href: "#depth-scroll",
@@ -18,7 +18,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "3d-scroll",
     title: "3D Scroll",
     description:
-      "A scroll-driven animation where a 3D model changes size and position as you scroll.",
+      "A scroll-driven study where a 3D model changes scale and position as the page moves.",
     tags: "EXPERIMENT",
     role: "Three.js",
     href: "#3d-scroll",
@@ -31,7 +31,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "hover-effect",
     title: "Hover Effect",
     description:
-      "A hover interaction that changes the background image while the gallery loops continuously.",
+      "A hover study that shifts the background image while the gallery keeps moving underneath.",
     tags: "EXPERIMENT",
     role: "GSAP",
     href: "#hover-effect",
@@ -44,7 +44,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "immersive-sphere",
     title: "Immersive Sphere",
     description:
-      "A 2D canvas sphere designed to create a convincing 3D illusion.",
+      "A 2D canvas experiment that uses light and motion to suggest a three-dimensional sphere.",
     tags: "EXPERIMENT",
     role: "Canvas 2D",
     href: "#immersive-sphere",
@@ -57,7 +57,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "svg-path",
     title: "SVG Path",
     description:
-      "A scroll-driven SVG animation that reveals content as you move through the page.",
+      "A scroll-driven SVG study that reveals a path and its content as you move through the page.",
     tags: "EXPERIMENT",
     role: "GSAP ScrollTrigger",
     href: "#svg-path",
@@ -70,7 +70,7 @@ export const PLAYGROUND_ITEMS: Project[] = [
     id: "scroll-video",
     title: "Scroll Video",
     description:
-      "A scroll-driven video animation that scrubs through footage as you scroll.",
+      "A scroll-driven video study that scrubs through footage in step with the page.",
     tags: "EXPERIMENT",
     role: "GSAP ScrollTrigger",
     href: "#scroll-video",

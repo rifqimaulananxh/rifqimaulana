@@ -9,16 +9,18 @@ import { SELECTED_WORKS } from "@/lib/projects";
 import { scrollToTarget } from "@/hooks/useLenis";
 import { navigateTo } from "@/lib/navigation";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 export function SelectedWork() {
   const sectionRef = useRef<HTMLElement>(null);
+  const introReady = useIntroReady();
   const [activeIndex, setActiveIndex] = useState(0);
   const activeWork = SELECTED_WORKS[activeIndex] ?? SELECTED_WORKS[0];
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || !introReady) return;
 
       const mediaTrack = section.querySelector<HTMLElement>(
         "[data-work-media-track]"
@@ -107,7 +109,7 @@ export function SelectedWork() {
 
       return () => mediaQuery.revert();
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   const jumpToWork = (id: string) => {

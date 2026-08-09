@@ -8,6 +8,7 @@ import { BRAND_IDENTITY, FOOTER_LINKS, NAV_LINKS } from "@/lib/constants";
 import { navigateTo } from "@/lib/navigation";
 import { lockScroll } from "@/hooks/useLenis";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,6 +17,8 @@ export function Navbar() {
   const drawerRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
+  const hasOpenedRef = useRef(false);
+  const introReady = useIntroReady();
   const activeIndex = Math.max(
     0,
     NAV_LINKS.findIndex((link) => {
@@ -29,7 +32,7 @@ export function Navbar() {
   useGSAP(
     () => {
       const links = menuItemsRef.current?.querySelectorAll("li a");
-      if (!links) return;
+      if (!links || !introReady) return;
       if (prefersReducedMotion()) {
         gsap.set(links, { y: isOpen ? 0 : "100%" });
         return;
@@ -53,16 +56,19 @@ export function Navbar() {
         });
       }
     },
-    { dependencies: [isOpen], revertOnUpdate: true }
+    { dependencies: [isOpen, introReady], revertOnUpdate: true }
   );
 
   useEffect(() => {
     if (!isOpen) {
-      (lastFocusedRef.current ?? menuButtonRef.current)?.focus();
-      lastFocusedRef.current = null;
+      if (hasOpenedRef.current) {
+        (lastFocusedRef.current ?? menuButtonRef.current)?.focus();
+        lastFocusedRef.current = null;
+      }
       return;
     }
 
+    hasOpenedRef.current = true;
     const unlock = lockScroll();
     const focusFirstItem = () => {
       drawerRef.current
@@ -144,15 +150,6 @@ export function Navbar() {
           <div className="menu-horizontal-line" />
         </button>
       </header>
-
-      <button
-        type="button"
-        className={`drawer-overlay ${isOpen ? "open" : ""}`}
-        onClick={() => setIsOpen(false)}
-        aria-label="Close menu"
-        aria-hidden={!isOpen}
-        tabIndex={isOpen ? 0 : -1}
-      />
 
       <div
         ref={drawerRef}

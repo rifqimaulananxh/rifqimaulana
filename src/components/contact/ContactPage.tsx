@@ -6,6 +6,7 @@ import { gsap, SplitText } from "@/lib/gsap";
 import { FOOTER_LINKS } from "@/lib/constants";
 import { CONTACT_BUDGETS } from "@/lib/pages";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 type ErrorField = "name" | "email" | "message" | null;
@@ -23,11 +24,12 @@ export function ContactPage() {
   const sectionRef = useRef<HTMLElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+  const introReady = useIntroReady();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || prefersReducedMotion()) return;
+      if (!section || !introReady || prefersReducedMotion()) return;
 
       const title = section.querySelector(".title h1");
       if (title) {
@@ -53,7 +55,7 @@ export function ContactPage() {
         { y: 0, opacity: 1, duration: 1, ease: "power4.out", delay: 0.9 }
       );
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   useEffect(() => {
@@ -102,7 +104,7 @@ export function ContactPage() {
 
   const sendRequest = () => {
     if (!message.trim()) {
-      setValidationError("message", "Please tell me a little about the project");
+      setValidationError("message", "Tell me what you are building");
       return;
     }
 
@@ -166,7 +168,7 @@ export function ContactPage() {
             {page === 1 ? (
               <div className="page-1-wrapper">
                 <p className="text-medium">
-                  Let&apos;s start a conversation
+                  Start with the problem
                 </p>
                 <div className="input-wrapper">
                   <label className="sr-only" htmlFor="contact-name">
@@ -259,7 +261,7 @@ export function ContactPage() {
                     ref={messageRef}
                     id="contact-message"
                     name="message"
-                    placeholder="Tell me about your project"
+                    placeholder="What are you building, and where do you need help?"
                     rows={4}
                     required
                     aria-invalid={errorField === "message"}

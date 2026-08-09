@@ -3,22 +3,50 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 import { SERVICES_DATA } from "@/lib/services";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 export function Services() {
   const sectionRef = useRef<HTMLElement>(null);
+  const introReady = useIntroReady();
   let imageCount = 0;
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || prefersReducedMotion()) return;
+      if (!section || !introReady || prefersReducedMotion()) return;
 
-      const textEls = section.querySelectorAll(".service-text");
       const imgEls = section.querySelectorAll(".service-img-wrapper");
       const mm = gsap.matchMedia();
+      const textSplit = SplitText.create(section.querySelectorAll(".service-text"), {
+        type: "words",
+        wordsClass: "service-word",
+      });
+      const words = textSplit.words;
+      const sectionTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: "top bottom",
+        end: "bottom top",
+        onEnter: () => section.classList.add("is-visible"),
+        onEnterBack: () => section.classList.add("is-visible"),
+        onLeave: () => section.classList.remove("is-visible"),
+        onLeaveBack: () => section.classList.remove("is-visible"),
+      });
+
+      gsap.set(words, { opacity: 0.16 });
+      gsap.to(words, {
+        opacity: 1,
+        ease: "none",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          end: "bottom 70%",
+          scrub: 0.6,
+        },
+      });
 
       mm.add("(max-width: 1024px)", () => {
         imgEls.forEach((el) => {
@@ -50,22 +78,14 @@ export function Services() {
         });
       });
 
-      textEls.forEach((el) => {
-        gsap.fromTo(
-          el,
-          { opacity: 0.5 },
-          {
-            opacity: 1,
-            duration: 0.6,
-            ease: "power4.out",
-            scrollTrigger: { trigger: el, start: "top 85%" },
-          }
-        );
-      });
-
-      return () => mm.revert();
+      return () => {
+        sectionTrigger.kill();
+        section.classList.remove("is-visible");
+        textSplit.revert();
+        mm.revert();
+      };
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (

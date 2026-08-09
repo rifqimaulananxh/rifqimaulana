@@ -4,18 +4,20 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 const MANIFESTO =
-  "I build reliable web products from interface to deployment. Clear systems, purposeful motion, and details that make complex things feel simple.";
+  "The best digital products make complexity feel obvious. I connect product thinking, interface craft, and dependable engineering to make that happen.";
 const MANIFESTO_WORDS = MANIFESTO.split(" ");
 
 export function Manifesto() {
   const sectionRef = useRef<HTMLElement>(null);
+  const introReady = useIntroReady();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section) return;
+      if (!section || !introReady) return;
 
       const words = gsap.utils.toArray<HTMLElement>(
         "[data-manifesto-word]",
@@ -40,7 +42,7 @@ export function Manifesto() {
         },
       });
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (

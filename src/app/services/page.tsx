@@ -5,7 +5,7 @@ import { FaqSection } from "@/components/services/FaqSection";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Capabilities by Rifqi Maulana: product interfaces, web applications, backend APIs, data and cloud infrastructure, performance, and interaction design.",
+    "Product interfaces, web applications, backend systems, data infrastructure, interaction design, and performance by Rifqi Maulana.",
   alternates: {
     canonical: "/services",
   },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     siteName: "Rifqi Maulana",
     title: "Services — Rifqi Maulana",
     description:
-      "Product interfaces, web applications, backend APIs, and thoughtful interaction design.",
+      "Product interfaces, web applications, backend systems, and interaction design.",
     images: [
       {
         url: "/og.png",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Services — Rifqi Maulana",
     description:
-      "Product interfaces, web applications, backend APIs, and thoughtful interaction design.",
+      "Product interfaces, web applications, backend systems, and interaction design.",
     images: ["/og.png"],
   },
 };

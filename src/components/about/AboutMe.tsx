@@ -8,21 +8,27 @@ import { gsap, SplitText } from "@/lib/gsap";
 import { HOME_DESCRIPTION } from "@/lib/site";
 import { BRAND_IDENTITY } from "@/lib/constants";
 import { prefersReducedMotion } from "@/lib/motion";
+import { useIntroReady } from "@/lib/intro";
 
 export function AboutMe() {
   const sectionRef = useRef<HTMLElement>(null);
+  const introReady = useIntroReady();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || prefersReducedMotion()) return;
+      if (!section || !introReady || prefersReducedMotion()) return;
 
       const wrapper = section.querySelector(".about-me-wrapper");
       const description = section.querySelector(".about-me-description");
       const pic = section.querySelector(".display-pic");
 
       if (pic && description) {
-        const words = SplitText.create(description, { type: "words" }).words;
+        const words = SplitText.create(description, {
+          type: "words",
+          mask: "words",
+          wordsClass: "about-word",
+        }).words;
         gsap.set(words, { y: "100%" });
         gsap.to(words, {
           y: "0%",
@@ -63,7 +69,7 @@ export function AboutMe() {
         });
       }
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
   );
 
   return (

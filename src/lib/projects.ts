@@ -28,7 +28,7 @@ export const SELECTED_WORKS: Project[] = [
     id: "modevelle",
     title: "MODEVELLE",
     description:
-      "A custom Shopify storefront with Liquid theming, editorial product pages, and a clearer purchase journey.",
+      "A Shopify storefront that gives editorial brand storytelling room to breathe without slowing down product discovery.",
     tags: "SHOPIFY, E-COMMERCE",
     role: "Web design and development",
     href: "/work/modevelle",
@@ -43,23 +43,23 @@ export const SELECTED_WORKS: Project[] = [
       year: "2025",
       service: "E-commerce / Shopify",
       overview:
-        "A custom Shopify storefront with Liquid theming, editorial product pages, and a clearer purchase journey.",
+        "A Shopify storefront shaped around editorial storytelling and a more direct path from discovery to purchase.",
       challenge:
-        "The storefront needed to feel editorial without making the path from product discovery to purchase feel complicated.",
+        "The brand needed a more considered storefront, but product discovery and checkout could not become secondary to the art direction.",
       approach: [
-        "Created a flexible Liquid structure for campaign and product-led pages.",
-        "Used hierarchy, spacing, and imagery to make product decisions easier to scan.",
-        "Connected the visual direction with a more direct purchase flow across the storefront.",
+        "Built a flexible Liquid theme for campaign pages and product-led content.",
+        "Used hierarchy, spacing, and imagery to make product choices easier to scan.",
+        "Connected the visual direction to a more direct purchase flow across the storefront.",
       ],
       outcome:
-        "A focused commerce experience that gives the brand more room to tell its story while keeping buying decisions clear.",
+        "A storefront that gives campaigns room to breathe while keeping products easy to compare and buy.",
     },
   },
   {
     id: "mad-world",
     title: "MAD WORLD",
     description:
-      "A Next.js web app built around content-first architecture, with motion used to guide discovery.",
+      "A content-led Next.js experience where motion helps people explore without getting in the way.",
     tags: "NEXT.JS, CREATIVE WEB APP",
     role: "Full-stack engineering",
     href: "/work/mad-world",
@@ -71,23 +71,23 @@ export const SELECTED_WORKS: Project[] = [
       year: "2025",
       service: "Creative web app",
       overview:
-        "A Next.js web app built around content-first architecture, with motion used to guide discovery.",
+        "A content-led Next.js experience designed to keep discovery expressive, structured, and easy to follow.",
       challenge:
-        "The experience needed to support a growing content surface while preserving a sense of pace and curiosity.",
+        "The experience needed to support a growing content surface while keeping a clear sense of pace and curiosity.",
       approach: [
         "Structured the application around reusable content and layout primitives.",
-        "Designed transitions to make discovery feel intentional instead of decorative.",
+        "Used transitions to make discovery feel intentional instead of decorative.",
         "Kept the interface responsive and performant across content-heavy views.",
       ],
       outcome:
-        "A content-led web experience where the system stays dependable and the interface still feels expressive.",
+        "A flexible content experience that stays dependable while leaving room for expression.",
     },
   },
   {
     id: "aura-os",
     title: "AURA OS",
     description:
-      "A React concept for an AI workspace, exploring ambient UI and fluid micro-interactions.",
+      "A React concept for an AI workspace, exploring calm interfaces for complex, high-context work.",
     tags: "REACT, WORKSPACE & AI UI",
     role: "Frontend architecture",
     href: "/work/aura-os",
@@ -99,23 +99,23 @@ export const SELECTED_WORKS: Project[] = [
       year: "2025",
       service: "Product interface / React",
       overview:
-        "A React concept for an AI workspace, exploring ambient UI and fluid micro-interactions.",
+        "A React concept for an AI workspace that uses hierarchy and motion to make advanced tools feel approachable.",
       challenge:
         "An AI workspace can quickly become dense with controls, so the interface needed to feel capable without feeling noisy.",
       approach: [
         "Built a calm layout system with clear hierarchy between work, context, and actions.",
-        "Used motion to communicate state changes and keep the workspace feeling responsive.",
-        "Designed interaction patterns that reveal complexity only when it is useful.",
+        "Used motion to communicate state changes and keep the workspace responsive.",
+        "Revealed complexity only when it was useful to the person working.",
       ],
       outcome:
-        "A focused workspace concept that makes advanced functionality feel approachable and easy to navigate.",
+        "A focused workspace concept that makes advanced functionality easier to understand and navigate.",
     },
   },
   {
     id: "pulse-ai",
     title: "PULSE AI",
     description:
-      "A data analytics tool with an interactive interface for exploring real-time insights.",
+      "An analytics interface that turns real-time signals into clearer paths to action.",
     tags: "WEB3, DATA ANALYTICS",
     role: "UI/UX and interactive design",
     href: "/work/pulse-ai",
@@ -127,16 +127,16 @@ export const SELECTED_WORKS: Project[] = [
       year: "2025",
       service: "Analytics / Interaction design",
       overview:
-        "A data analytics tool with an interactive interface for exploring real-time insights.",
+        "An analytics interface designed to help people move from a live signal to the detail behind it.",
       challenge:
         "Real-time data is only useful when people can quickly understand what changed and why it matters.",
       approach: [
         "Organized the experience around an actionable overview instead of raw data density.",
-        "Created interaction patterns for moving from a signal to the detail behind it.",
+        "Created a clear path from a signal to the detail behind it.",
         "Balanced high-information views with visual rhythm and clear decision points.",
       ],
       outcome:
-        "An analytics experience that gives complex information a clearer visual structure and a more direct path to insight.",
+        "An analytics experience that gives complex information a clearer structure and a more direct path to insight.",
     },
   },
 ];
