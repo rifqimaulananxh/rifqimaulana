@@ -137,6 +137,43 @@ Avoid generic SaaS aesthetics, and avoid:
 
 Do not turn every section into cards. Do not make every element rounded. Do not add visual effects simply to make the UI look modern. Typography, spacing, imagery, composition, and hierarchy should do most of the visual work.
 
+## Writing & content style
+
+All website copy should feel concise, confident, intelligent, modern, clear, intentional, premium, and human.
+
+Prefer short, strong sentences over long explanations. Use simple language with strong meaning.
+
+Avoid generic AI/SaaS marketing language such as:
+- "Revolutionize your business"
+- "Take your business to the next level"
+- "Unlock your potential"
+- "Powerful solutions for your business"
+- "Seamlessly"
+- "Cutting-edge"
+- "Transform your workflow"
+- "The future of..."
+- "All-in-one platform"
+
+Avoid excessive buzzwords. Avoid sounding overly corporate, overly promotional, generic, cheesy, exaggerated, or AI-generated.
+
+Headlines should be short, memorable, confident, and specific when possible.
+
+Prefer:
+
+"Software built to last."
+
+over:
+
+"Powerful software solutions designed to transform your business."
+
+Supporting copy should provide context without repeating the headline.
+
+CTAs should be direct and natural. Prefer "View project", "Explore", "Start a project", "Get in touch", "See how it works". Avoid overly promotional CTAs.
+
+Do not invent statistics, testimonials, awards, clients, case-study results, or business claims unless explicitly provided or requested as placeholder content. When content is missing, use concise placeholder copy rather than inventing fake claims.
+
+Writing should support the visual design. Do not fill whitespace simply because there is available space.
+
 ## Engineering preferences
 
 Prefer:
