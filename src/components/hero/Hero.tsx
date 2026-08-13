@@ -4,18 +4,20 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motion";
-import { useIntroReady } from "@/lib/intro";
+import { useIntroReady, useRouteReady } from "@/lib/intro";
 
 const HEADLINE_WORDS = ["Building", "useful", "web", "products"];
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const introReady = useIntroReady();
+  const routeReady = useRouteReady();
+  const revealReady = introReady || routeReady;
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      if (!section || !introReady) return;
+      if (!section || !revealReady) return;
 
       const navbar = document.querySelector(".navbar");
       const titleLines = section.querySelectorAll(".hero-title-line");
@@ -51,7 +53,7 @@ export function Hero() {
         }
       );
     },
-    { scope: sectionRef, dependencies: [introReady], revertOnUpdate: true }
+    { scope: sectionRef, dependencies: [revealReady], revertOnUpdate: true }
   );
 
   return (

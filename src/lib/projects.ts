@@ -25,118 +25,322 @@ export interface Project {
 
 export const SELECTED_WORKS: Project[] = [
   {
-    id: "modevelle",
-    title: "MODEVELLE",
+    id: "architecture-bureau",
+    title: "ARCHITECTURE BUREAU",
     description:
-      "A Shopify storefront that gives editorial brand storytelling room to breathe without slowing down product discovery.",
-    tags: "SHOPIFY, E-COMMERCE",
-    role: "Web design and development",
-    href: "/work/modevelle",
+      "An editorial architectural showcase featuring tactile SVG plan reveals, site topography stories, and synchronized Lenis scroll physics.",
+    tags: "NEXT.JS 16, GSAP SCROLLTRIGGER, EDITORIAL UI",
+    role: "Art direction & Frontend Architecture",
+    href: "/work/architecture-bureau",
     image: [
-      "/images/portofolio/porto-1.webp",
-      "/images/portofolio/porto-2.webp",
+      "/images/projects/architecture-bureau.jpg",
+      "/images/projects/architecture-bureau-2.jpg",
+      "/images/projects/architecture-bureau-3.jpg",
     ],
-    bgMediaUrl: "/images/portofolio/porto-1.webp",
+    bgMediaUrl: "/images/projects/architecture-bureau.jpg",
     type: "Project",
     category: "web",
     caseStudy: {
-      year: "2025",
-      service: "E-commerce / Shopify",
+      year: "2026",
+      service: "Editorial Digital Showcase / Next.js",
       overview:
-        "A Shopify storefront shaped around editorial storytelling and a more direct path from discovery to purchase.",
+        "A high-craft architectural case study centered on the 'Casa Larga' mountain site outside Medellín, giving drawings, materials, and spatial thresholds a deliberate, tactile visual pace.",
       challenge:
-        "The brand needed a more considered storefront, but product discovery and checkout could not become secondary to the art direction.",
+        "Standard agency sites rush user attention through high-contrast banners. The challenge was orchestrating technical CAD line drawings, thermal mass concrete specs, and forest photography with zero visual clutter or performance degradation.",
       approach: [
-        "Built a flexible Liquid theme for campaign pages and product-led content.",
-        "Used hierarchy, spacing, and imagery to make product choices easier to scan.",
-        "Connected the visual direction to a more direct purchase flow across the storefront.",
+        "Architected custom SVG line-drawing stroke animations (.plan-svg) triggered cleanly via GSAP ScrollTrigger.",
+        "Synchronized Lenis momentum scroll physics with header auto-hide behavior and graceful reduced-motion fallbacks.",
+        "Refactored code into isolated modular primitives (PlanSvg, ImageReveal, InquiryModal) for strict maintainability.",
       ],
       outcome:
-        "A storefront that gives campaigns room to breathe while keeping products easy to compare and buy.",
+        "A serene, editorial-grade architecture showcase that communicates spatial precision and converts visitors via a seamless inquiry modal.",
     },
   },
   {
-    id: "mad-world",
-    title: "MAD WORLD",
+    id: "frame-estate",
+    title: "FRAME ESTATE",
     description:
-      "A content-led Next.js experience where motion helps people explore without getting in the way.",
-    tags: "NEXT.JS, CREATIVE WEB APP",
-    role: "Full-stack engineering",
-    href: "/work/mad-world",
-    image: ["/images/portofolio/porto-3.webp"],
-    bgMediaUrl: "/images/portofolio/porto-3.webp",
+      "A modern timber-frame construction platform built to clarify scope, material origin, and phase handovers.",
+    tags: "NEXT.JS 16, PARALLAX SCROLL, B2B BRANDING",
+    role: "Brand Experience & Frontend Engineering",
+    href: "/work/frame-estate",
+    image: [
+      "/images/projects/frame-estate.jpg",
+      "/images/projects/frame-estate-2.jpg",
+      "/images/projects/frame-estate-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/frame-estate.jpg",
     type: "Project",
     category: "web",
     caseStudy: {
-      year: "2025",
-      service: "Creative web app",
+      year: "2026",
+      service: "B2B Construction Platform / Next.js",
       overview:
-        "A content-led Next.js experience designed to keep discovery expressive, structured, and easy to follow.",
+        "A responsive construction platform concept built to translate complex architectural frame building processes into a transparent, step-by-step digital journey.",
       challenge:
-        "The experience needed to support a growing content surface while keeping a clear sense of pace and curiosity.",
+        "Commercial construction leads often drop off due to opaque project stages and impersonal contact forms.",
       approach: [
-        "Structured the application around reusable content and layout primitives.",
-        "Used transitions to make discovery feel intentional instead of decorative.",
-        "Kept the interface responsive and performant across content-heavy views.",
+        "Engineered staggered card reveals, magnetic micro-interactions, and visual material breakdowns.",
+        "Built a dedicated local-first consultation flow with immediate feedback and accessible modal states.",
+        "Created production-grade SEO infrastructure with auto-generated sitemaps, canonical tags, and asset attribution.",
       ],
       outcome:
-        "A flexible content experience that stays dependable while leaving room for expression.",
+        "An authoritative B2B construction brand experience that transforms complex building phases into a clear conversion funnel.",
     },
   },
   {
-    id: "aura-os",
-    title: "AURA OS",
+    id: "harmony-sound",
+    title: "HARMONY SOUND",
     description:
-      "A React concept for an AI workspace, exploring calm interfaces for complex, high-context work.",
-    tags: "REACT, WORKSPACE & AI UI",
-    role: "Frontend architecture",
-    href: "/work/aura-os",
-    image: ["/images/portofolio/porto-4.webp"],
-    bgMediaUrl: "/images/portofolio/porto-4.webp",
+      "An editorial e-commerce concept for a premium audio atelier with a working cart, live product filtering, and a bespoke CSS design system.",
+    tags: "NEXT.JS 16, REACT 19, BESPOKE CSS",
+    role: "Design & Frontend Engineering",
+    href: "/work/harmony-sound",
+    image: [
+      "/images/projects/harmony-sound.jpg",
+      "/images/projects/harmony-sound-2.jpg",
+      "/images/projects/harmony-sound-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/harmony-sound.jpg",
     type: "Project",
-    category: "design",
+    category: "web",
     caseStudy: {
-      year: "2025",
-      service: "Product interface / React",
+      year: "2026",
+      service: "E-commerce Concept / Next.js",
       overview:
-        "A React concept for an AI workspace that uses hierarchy and motion to make advanced tools feel approachable.",
+        "An editorial storefront for a premium audio atelier, built so the products carry the page without a template system doing the talking.",
       challenge:
-        "An AI workspace can quickly become dense with controls, so the interface needed to feel capable without feeling noisy.",
+        "Product pages too easily become grids of features. The store needed real commerce behavior without losing a calm, editorial pace.",
       approach: [
-        "Built a calm layout system with clear hierarchy between work, context, and actions.",
-        "Used motion to communicate state changes and keep the workspace responsive.",
-        "Revealed complexity only when it was useful to the person working.",
+        "Built a working cart drawer with quantity controls, line removal, live subtotals, and full dialog accessibility.",
+        "Implemented live category filtering and free-text search through a single memoized pass, with an accessible empty state.",
+        "Designed a bespoke CSS system with Lenis smooth scroll and IntersectionObserver reveals, fully reduced-motion aware.",
       ],
       outcome:
-        "A focused workspace concept that makes advanced functionality easier to understand and navigate.",
+        "An e-commerce concept where art direction and checkout behavior coexist without either one dominating.",
     },
   },
   {
-    id: "pulse-ai",
-    title: "PULSE AI",
+    id: "ockham",
+    title: "OCKHAM",
     description:
-      "An analytics interface that turns real-time signals into clearer paths to action.",
-    tags: "WEB3, DATA ANALYTICS",
-    role: "UI/UX and interactive design",
-    href: "/work/pulse-ai",
-    image: ["/images/portofolio/porto-5.webp"],
-    bgMediaUrl: "/images/portofolio/porto-5.webp",
+      "A brutalist video production portfolio with a custom motion engine and a scripted ffmpeg + sharp pipeline that renders a 15-second ad.",
+    tags: "NEXT.JS 16, LENIS, FFMPEG PIPELINE",
+    role: "Creative Engineering",
+    href: "/work/ockham",
+    image: [
+      "/images/projects/ockham.jpg",
+      "/images/projects/ockham-2.jpg",
+      "/images/projects/ockham-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/ockham.jpg",
     type: "Project",
-    category: "design",
+    category: "web",
     caseStudy: {
-      year: "2025",
-      service: "Analytics / Interaction design",
+      year: "2026",
+      service: "Creative Portfolio / Next.js",
       overview:
-        "An analytics interface designed to help people move from a live signal to the detail behind it.",
+        "A brutalist portfolio for a video production company, built around a hand-rolled motion system and an automated ad-render pipeline.",
       challenge:
-        "Real-time data is only useful when people can quickly understand what changed and why it matters.",
+        "The site had to feel like the work it sells: direct, heavy, and a little raw. Off-the-shelf animation libraries would have softened it.",
       approach: [
-        "Organized the experience around an actionable overview instead of raw data density.",
-        "Created a clear path from a signal to the detail behind it.",
-        "Balanced high-information views with visual rhythm and clear decision points.",
+        "Wrote a custom motion engine on Lenis with magnetic buttons, parallax offsets, text reveals, a scroll progress bar, and modal-aware scroll pausing.",
+        "Built a render script that generates 360 SVG frames and pipes them through ffmpeg to produce a 15-second MP4 from the command line.",
+        "Shipped a generated Open Graph image, JSON-LD, sitemap, and robots, with security headers on every response.",
       ],
       outcome:
-        "An analytics experience that gives complex information a clearer structure and a more direct path to insight.",
+        "A portfolio whose animation system and content pipeline are as handmade as the work it presents.",
+    },
+  },
+  {
+    id: "the-ordinary",
+    title: "THE ORDINARY",
+    description:
+      "An ingredient-led skincare landing page with masked-line type, a working cart and search, and product-level structured data.",
+    tags: "NEXT.JS 16, LENIS, JSON-LD",
+    role: "Design & Frontend Engineering",
+    href: "/work/the-ordinary",
+    image: [
+      "/images/projects/the-ordinary.jpg",
+      "/images/projects/the-ordinary-2.jpg",
+      "/images/projects/the-ordinary-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/the-ordinary.jpg",
+    type: "Project",
+    category: "web",
+    caseStudy: {
+      year: "2026",
+      service: "Brand Landing Page / Next.js",
+      overview:
+        "A clinical, ingredient-led skincare landing page that lets typography and restraint do the talking.",
+      challenge:
+        "Skincare marketing is noisy. The page had to feel scientific and honest while still moving product.",
+      approach: [
+        "Used slow masked-line headline reveals and clip-path image wipes driven by a single IntersectionObserver.",
+        "Built a working cart with a count badge, a search bar, and drawer panels for menu, account, and cart with scroll lock.",
+        "Added product-level JSON-LD with real pricing and a generated Open Graph image for richer search results.",
+      ],
+      outcome:
+        "A landing page that reads as credible first, promotional second.",
+    },
+  },
+  {
+    id: "parana-property-group",
+    title: "PARANÁ PROPERTY GROUP",
+    description:
+      "A corporate real estate site for Paraná with a cinematic hero, a cyclic property gallery, and an accessible inquiry flow.",
+    tags: "NEXT.JS 16, REACT 19",
+    role: "Design & Frontend Engineering",
+    href: "/work/parana-property-group",
+    image: [
+      "/images/projects/parana.jpg",
+      "/images/projects/parana-2.jpg",
+      "/images/projects/parana-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/parana.jpg",
+    type: "Project",
+    category: "web",
+    caseStudy: {
+      year: "2026",
+      service: "Corporate Real Estate / Next.js",
+      overview:
+        "A confident, single-page presence for a property group, built around strong imagery and a direct path to inquiry.",
+      challenge:
+        "Real estate sites bury the ask under listings and carousels. This one needed presence without friction.",
+      approach: [
+        "Composed a cinematic hero with an active-nav state and a scroll cue that guides the visitor downward.",
+        "Built a cyclic gallery carousel and an inquiry modal with a success state, Escape handling, and body scroll lock.",
+        "Kept motion to CSS transitions and focus-visible states so the page stays fast and quiet.",
+      ],
+      outcome: "A presence that sells the developer, not just the property.",
+    },
+  },
+  {
+    id: "open-trip",
+    title: "OPEN TRIP",
+    description:
+      "A travel booking concept for open trips across Indonesia with a dual filter system and a trip detail modal.",
+    tags: "NEXT.JS 16, REACT 19",
+    role: "Frontend Engineering",
+    href: "/work/open-trip",
+    image: [
+      "/images/projects/open-trip.jpg",
+      "/images/projects/open-trip-2.jpg",
+      "/images/projects/open-trip-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/open-trip.jpg",
+    type: "Project",
+    category: "web",
+    caseStudy: {
+      year: "2026",
+      service: "Travel Booking Concept / Next.js",
+      overview:
+        "An open-trip operator site that makes deciding between trips easier, with search and filters that actually change the list.",
+      challenge:
+        "Trip listing pages fail when filters are decorative. Every control on this page had to drive the results.",
+      approach: [
+        "Built a hero search bar and a destination filter bar that both feed a single filtering layer over the trip list.",
+        "Added a no-results state with a reset action and a live result count announced to screen readers.",
+        "Wrapped trip details in an accessible modal with a mailto booking handoff.",
+      ],
+      outcome:
+        "A travel site where narrowing from a full list to one trip takes two deliberate clicks.",
+    },
+  },
+  {
+    id: "meat-master",
+    title: "MEAT MASTER",
+    description:
+      "A Russian-language restaurant site with a working dish carousel, reservation form, and Lenis-powered anchor routing.",
+    tags: "NEXT.JS 16, LENIS, RUSSIAN LOCALE",
+    role: "Design & Frontend Engineering",
+    href: "/work/meat-master",
+    image: [
+      "/images/projects/meat-master.jpg",
+      "/images/projects/meat-master-2.jpg",
+      "/images/projects/meat-master-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/meat-master.jpg",
+    type: "Project",
+    category: "web",
+    caseStudy: {
+      year: "2026",
+      service: "Restaurant Website / Next.js",
+      overview:
+        "A wood-fire restaurant site built around the two things people actually want: the menu and the reservation.",
+      challenge:
+        "Restaurant sites usually bury the menu and the booking under prose. This one had to keep both one scroll away.",
+      approach: [
+        "Built a category-tabbed dish carousel with a working add-to-cart count and interactive delivery slot selection.",
+        "Implemented a validated reservation form with a success state and hash links routed through Lenis smooth scroll.",
+        "Shipped Restaurant JSON-LD, a generated Open Graph image, sitemap, and robots for local search.",
+      ],
+      outcome:
+        "A restaurant site that treats the menu as the hero and the reservation as the goal.",
+    },
+  },
+  {
+    id: "luvbag-fitness",
+    title: "LUVBAG FITNESS",
+    description:
+      "A fitness equipment storefront with a live product customizer that swaps color, quantity, and cart state in place.",
+    tags: "NEXT.JS 16, REACT 19, LENIS",
+    role: "Design & Frontend Engineering",
+    href: "/work/luvbag-fitness",
+    image: [
+      "/images/projects/luvbag.jpg",
+      "/images/projects/luvbag-2.jpg",
+      "/images/projects/luvbag-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/luvbag.jpg",
+    type: "Project",
+    category: "web",
+    caseStudy: {
+      year: "2026",
+      service: "E-commerce Storefront / Next.js",
+      overview:
+        "A storefront for fitness equipment built around one idea: let the customer configure before they commit.",
+      challenge:
+        "Static product grids make gear feel interchangeable. The store needed a moment of configuration.",
+      approach: [
+        "Built a product customizer where color swatches restyle the stage image and a quantity stepper updates the cart count live.",
+        "Wrapped product details in an accessible modal with focus management and scroll lock, plus a persistent cart toast.",
+        "Shipped Organization, WebSite, and Product JSON-LD with real offers and availability.",
+      ],
+      outcome:
+        "A storefront that turns a purchase into a small, satisfying assembly.",
+    },
+  },
+  {
+    id: "taste-of-adventure",
+    title: "TASTE OF ADVENTURE",
+    description:
+      "A contemporary restaurant site with tabbed menus, parallax imagery, magnetic CTAs, and a focus-trapped menu modal.",
+    tags: "NEXT.JS 16, LENIS, PARALLAX",
+    role: "Design & Frontend Engineering",
+    href: "/work/taste-of-adventure",
+    image: [
+      "/images/projects/taste-of-adventure.jpg",
+      "/images/projects/taste-of-adventure-2.jpg",
+      "/images/projects/taste-of-adventure-3.jpg",
+    ],
+    bgMediaUrl: "/images/projects/taste-of-adventure.jpg",
+    type: "Project",
+    category: "web",
+    caseStudy: {
+      year: "2026",
+      service: "Restaurant Website / Next.js",
+      overview:
+        "A restaurant site built around appetite: full-bleed photography, tabbed menus, and an unmissable reservation.",
+      challenge:
+        "A restaurant site must feel like walking into the room, not like reading a brochure.",
+      approach: [
+        "Built a tabbed dish menu with full ARIA tab semantics and a focus-trapped full-menu modal that pauses Lenis while open.",
+        "Added parallax on key imagery, magnetic CTAs, and a scroll progress bar, all reduced-motion aware.",
+        "Routed every anchor link through Lenis with focus management for keyboard users.",
+      ],
+      outcome:
+        "A site with the warmth of the room and the clarity of a good menu.",
     },
   },
 ];

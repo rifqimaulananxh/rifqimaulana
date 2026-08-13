@@ -21,3 +21,29 @@ export function useIntroReady() {
     () => false
   );
 }
+
+let routeReady = false;
+const routeListeners = new Set<() => void>();
+
+export function markRouteUnready() {
+  if (!routeReady) return;
+  routeReady = false;
+  routeListeners.forEach((listener) => listener());
+}
+
+export function markRouteReady() {
+  if (routeReady) return;
+  routeReady = true;
+  routeListeners.forEach((listener) => listener());
+}
+
+export function useRouteReady() {
+  return useSyncExternalStore(
+    (listener) => {
+      routeListeners.add(listener);
+      return () => routeListeners.delete(listener);
+    },
+    () => routeReady,
+    () => false
+  );
+}

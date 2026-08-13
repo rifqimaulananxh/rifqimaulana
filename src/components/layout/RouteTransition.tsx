@@ -8,6 +8,10 @@ import {
   ROUTE_NAMES,
   consumePendingHash,
 } from "@/lib/navigation";
+import {
+  markRouteUnready,
+  markRouteReady,
+} from "@/lib/intro";
 import { prefersReducedMotion } from "@/lib/motion";
 
 export function RouteTransition() {
@@ -33,6 +37,7 @@ export function RouteTransition() {
       setLabel(
         ROUTE_NAMES[path] || (path.startsWith("/work/") ? "Work" : "Home")
       );
+      markRouteUnready();
 
       const lenis = getLenis();
       lenis?.stop();
@@ -114,12 +119,14 @@ export function RouteTransition() {
           onComplete: () => {
             gsap.set(panel, { visibility: "hidden" });
             navigatingRef.current = false;
+            markRouteReady();
           },
         });
       }, 400);
       return () => window.clearTimeout(timeoutId);
     }
     navigatingRef.current = false;
+    markRouteReady();
   }, [pathname]);
 
   return (

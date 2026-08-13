@@ -5,7 +5,7 @@ Personal portfolio and software engineering showcase for [rifqimaulana.dev](http
 ## Pages
 
 - **Home** — hero, featured work, services overview
-- **Work** — selected projects, categorized (web / design / playground)
+- **Work** — selected projects, categorized (web / design / playground), each with a case study built from a real project (Architecture Bureau, Frame Estate, Harmony Sound, Ockham, The Ordinary, and more)
 - **Services** — offerings + FAQ
 - **About Me** — background and how I work
 - **Contact** — email + WhatsApp inquiry form

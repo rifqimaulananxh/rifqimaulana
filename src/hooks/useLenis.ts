@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Lenis from "lenis";
-import { ScrollTrigger } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motion";
 
 let lenisInstance: Lenis | null = null;
@@ -79,17 +79,12 @@ export function useLenis() {
     lenisReadyCallbacks.clear();
 
     lenis.on("scroll", ScrollTrigger.update);
-
-    let rafId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    };
-
-    rafId = requestAnimationFrame(raf);
+    const rafTicker = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(rafTicker);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(rafTicker);
       lenis.destroy();
       lenisInstance = null;
     };
