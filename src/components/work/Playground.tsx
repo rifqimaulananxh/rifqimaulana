@@ -104,6 +104,7 @@ export function Playground({ limit }: { limit?: number }) {
   return (
     <section
       ref={sectionRef}
+      id="playground"
       className="playground-section"
       aria-labelledby="playground-heading"
     >

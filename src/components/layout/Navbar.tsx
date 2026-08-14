@@ -10,6 +10,12 @@ import { lockScroll } from "@/hooks/useLenis";
 import { prefersReducedMotion } from "@/lib/motion";
 import { useIntroReady } from "@/lib/intro";
 
+const NAVBAR_LINKS = [
+  { label: "Work", href: "/work" },
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about-me" },
+];
+
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
@@ -137,6 +143,64 @@ export function Navbar() {
             {BRAND_IDENTITY.logo}
           </button>
         </div>
+
+        <nav className="navbar-links" aria-label="Primary">
+          {NAVBAR_LINKS.map((link, index) => {
+            const path = link.href.split("#")[0];
+            const isActive =
+              path === "/"
+                ? pathname === "/"
+                : pathname === path || pathname.startsWith(`${path}/`);
+            return (
+              <a
+                key={link.label}
+                href={link.href}
+                className={`navbar-link ${isActive ? "active" : ""}`}
+                onClick={(event) => {
+                  if (
+                    event.button !== 0 ||
+                    event.metaKey ||
+                    event.ctrlKey ||
+                    event.shiftKey ||
+                    event.altKey
+                  ) {
+                    return;
+                  }
+                  event.preventDefault();
+                  handleNavigate(link.href);
+                }}
+              >
+                {link.label}
+                {isActive ? (
+                  <span className="navbar-link-index">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                ) : null}
+              </a>
+            );
+          })}
+        </nav>
+
+        <a
+          href="/contact"
+          className="navbar-contact"
+          onClick={(event) => {
+            if (
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey ||
+              event.altKey
+            ) {
+              return;
+            }
+            event.preventDefault();
+            handleNavigate("/contact");
+          }}
+        >
+          Contact
+        </a>
+
         <button
           type="button"
           className={`right ${isOpen ? "open" : ""}`}

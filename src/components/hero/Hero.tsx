@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/motion";
@@ -70,6 +71,15 @@ export function Hero() {
           <div className="hero-redesign-footer text-small" data-hero-content>
             <span>Clear decisions from first interaction to production.</span>
           </div>
+        </div>
+        <div className="hero-graphic" data-hero-content>
+          <Image
+            src="/images/projects/architecture-bureau.jpg"
+            alt=""
+            fill
+            sizes="(max-width: 1024px) 100vw, 44vw"
+            className="hero-graphic-image"
+          />
         </div>
       </div>
     </section>
