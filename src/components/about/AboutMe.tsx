@@ -57,8 +57,6 @@ export function AboutMe() {
             },
           }
         );
-
-        return () => mm.revert();
       }
 
       if (wrapper) {

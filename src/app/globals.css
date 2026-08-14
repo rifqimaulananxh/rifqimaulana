@@ -17,7 +17,6 @@ html {
   scrollbar-width: thin;
   scrollbar-color: var(--secondary) var(--primary);
   font-size: 62.5%;
-  overflow-x: clip;
 }
 
 ::-webkit-scrollbar {
