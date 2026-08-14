@@ -325,7 +325,6 @@ textarea {
   .navbar {
     padding-top: 10px;
     padding-bottom: 6px;
-    background: linear-gradient(var(--primary) 60%, transparent);
   }
   .navbar .right {
     gap: 5px;
@@ -456,7 +455,7 @@ textarea {
 .playground-section {
   background-color: var(--primary);
   z-index: 20;
-  padding: 180px 0 140px;
+  padding: 130px 0 110px;
   position: relative;
 }
 .playground-section .section-header {
@@ -748,9 +747,8 @@ textarea {
 .services-section {
   z-index: 2;
   background-color: var(--primary);
-  margin-top: 100px;
-  padding-top: 200px;
-  padding-bottom: 300px;
+  padding-top: 160px;
+  padding-bottom: 180px;
   position: relative;
 }
 .services-section .services-header {
@@ -1366,7 +1364,7 @@ body:has(.intro-preloader) {
   color: var(--secondary);
   background: var(--primary);
   font-family: var(--font-jost), sans-serif;
-  padding: 180px 0 220px;
+  padding: 140px 0 140px;
 }
 .stack-intro {
   grid-template-columns: minmax(0, 1fr) minmax(280px, 0.55fr);
@@ -2760,25 +2758,27 @@ body:has(.intro-preloader) {
   line-height: 1;
 }
 .reference-work-names {
-  min-height: 96px;
+  min-height: 130px;
   position: relative;
   margin: auto 0;
 }
 .reference-work-current-stack {
-  height: 96px;
+  height: 130px;
   position: relative;
 }
 .reference-work-current-layer {
   color: inherit;
   appearance: none;
-  align-items: center;
-  gap: 26px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 10px;
   text-align: left;
   background: transparent;
   border: 0;
   cursor: pointer;
   width: 100%;
-  height: 96px;
+  height: 130px;
   padding: 0;
   font: inherit;
   display: flex;
