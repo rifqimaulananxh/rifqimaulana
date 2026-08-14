@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Funnel_Display } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { RouteTransition } from "@/components/layout/RouteTransition";
@@ -77,6 +78,13 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+const funnelDisplay = Funnel_Display({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-funnel-display",
+});
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
@@ -105,7 +113,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className="h-full antialiased"
+      className={`h-full antialiased ${funnelDisplay.variable}`}
     >
       <body className="min-h-full flex flex-col">
         <script
