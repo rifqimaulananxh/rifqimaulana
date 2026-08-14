@@ -54,7 +54,7 @@ export function Services() {
             el,
             { height: "0px" },
             {
-              height: "25px",
+              height: "24px",
               duration: 0.7,
               ease: "power1.out",
               scrollTrigger: { trigger: el, start: "top bottom" },

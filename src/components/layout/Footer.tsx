@@ -29,7 +29,7 @@ export function Footer() {
           </div>
 
           <span className="text-x-small footer-credit">
-            Designed &amp; Developed by {BRAND_IDENTITY.name}
+            Designed & Developed by {BRAND_IDENTITY.name}
           </span>
         </div>
       </div>

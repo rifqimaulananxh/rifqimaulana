@@ -24,21 +24,24 @@ export function AboutMe() {
       const pic = section.querySelector(".display-pic");
 
       if (pic && description) {
-        const words = SplitText.create(description, {
-          type: "words",
-          mask: "words",
-          wordsClass: "about-word",
-        }).words;
-        gsap.set(words, { y: "100%" });
-        gsap.to(words, {
-          y: "0%",
-          duration: 1.2,
-          ease: "power4.out",
-          stagger: 0.03,
-          scrollTrigger: {
-            trigger: description,
-            start: "top 90%",
-          },
+        const mm = gsap.matchMedia();
+        mm.add("(min-width: 1025px)", () => {
+          const words = SplitText.create(description, {
+            type: "words",
+            mask: "words",
+            wordsClass: "about-word",
+          }).words;
+          gsap.set(words, { y: "100%" });
+          gsap.to(words, {
+            y: "0%",
+            duration: 1.2,
+            ease: "power4.out",
+            stagger: 0.03,
+            scrollTrigger: {
+              trigger: description,
+              start: "top 90%",
+            },
+          });
         });
 
         gsap.fromTo(
@@ -54,6 +57,8 @@ export function AboutMe() {
             },
           }
         );
+
+        return () => mm.revert();
       }
 
       if (wrapper) {
